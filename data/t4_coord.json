@@ -1,0 +1,400 @@
+{
+  "year": {
+    "description": "Tax year for this T4",
+    "type": "string",
+    "region": {
+      "x1": 749,
+      "y1": 132,
+      "x2": 817,
+      "y2": 159
+    }
+  },
+  "12": {
+    "description": "Social Insurance Number(SIN), 9-digit number",
+    "type": "string",
+    "region": {
+      "x1": 229,
+      "y1": 375,
+      "x2": 365,
+      "y2": 398
+    }
+  },
+  "employee_first_name": {
+    "description": "Employee's first name",
+    "type": "string",
+    "region": {
+      "x1": 542,
+      "y1": 509,
+      "x2": 609,
+      "y2": 537
+    }
+  },
+  "employee_last_name": {
+    "description": "Employee's last name",
+    "type": "string",
+    "region": {
+      "x1": 189,
+      "y1": 508,
+      "x2": 306,
+      "y2": 531
+    }
+  },
+  "employee_address": {
+    "description": "Employee's address",
+    "type": "string",
+    "region": {
+      "x1": 178,
+      "y1": 561,
+      "x2": 354,
+      "y2": 661
+    }
+  },
+  "employer_name": {
+    "description": "Employer's name",
+    "type": "string",
+    "region": {
+      "x1": 159,
+      "y1": 117,
+      "x2": 310,
+      "y2": 140
+    }
+  },
+  "54": {
+    "description": "Employer's account number / Num\u00e9ro de compte de l'employeur",
+    "type": "string",
+    "region": {
+      "x1": 199,
+      "y1": 288,
+      "x2": 357,
+      "y2": 310
+    }
+  },
+  "10": {
+    "description": "Province of employment code",
+    "type": "string",
+    "region": {
+      "x1": 716,
+      "y1": 323,
+      "x2": 764,
+      "y2": 351
+    }
+  },
+  "14": {
+    "description": "Employment income - total earnings for the year (salary, wages, bonuses)",
+    "type": "float",
+    "integer_region": {
+      "x1": 919,
+      "y1": 216,
+      "x2": 1019,
+      "y2": 240
+    },
+    "float_region": {
+      "x1": 1029,
+      "y1": 213,
+      "x2": 1061,
+      "y2": 233
+    }
+  },
+  "16": {
+    "description": "Employee's CPP contributions - Canada Pension Plan contributions deducted",
+    "type": "float",
+    "integer_region": {
+      "x1": 924,
+      "y1": 291,
+      "x2": 1021,
+      "y2": 313
+    },
+    "float_region": {
+      "x1": 1032,
+      "y1": 291,
+      "x2": 1060,
+      "y2": 311
+    }
+  },
+  "16A": {
+    "description": "Employee's second CPP contributions - additional CPP for higher earners",
+    "type": "float",
+    "integer_region": {
+      "x1": 925,
+      "y1": 375,
+      "x2": 1023,
+      "y2": 397
+    },
+    "float_region": {
+      "x1": 1031,
+      "y1": 373,
+      "x2": 1065,
+      "y2": 394
+    }
+  },
+  "17": {
+    "description": "Employee's QPP contributions - Quebec Pension Plan contributions (Quebec only)",
+    "type": "float",
+    "integer_region": {
+      "x1": 1225,
+      "y1": 295,
+      "x2": 1319,
+      "y2": 317
+    },
+    "float_region": {
+      "x1": 1341,
+      "y1": 299,
+      "x2": 1379,
+      "y2": 316
+    }
+  },
+  "17A": {
+    "description": "Employee's second QPP contributions - additional QPP for higher earners",
+    "type": "float",
+    "integer_region": {
+      "x1": 1224,
+      "y1": 376,
+      "x2": 1321,
+      "y2": 397
+    },
+    "float_region": {
+      "x1": 1343,
+      "y1": 376,
+      "x2": 1380,
+      "y2": 396
+    }
+  },
+  "18": {
+    "description": "Employee's EI premiums - Employment Insurance premiums deducted",
+    "type": "float",
+    "integer_region": {
+      "x1": 927,
+      "y1": 516,
+      "x2": 1022,
+      "y2": 544
+    },
+    "float_region": {
+      "x1": 1030,
+      "y1": 519,
+      "x2": 1065,
+      "y2": 538
+    }
+  },
+  "20": {
+    "description": "RPP contributions - Registered Pension Plan contributions",
+    "type": "float",
+    "integer_region": {
+      "x1": 921,
+      "y1": 592,
+      "x2": 1021,
+      "y2": 615
+    },
+    "float_region": {
+      "x1": 1030,
+      "y1": 594,
+      "x2": 1061,
+      "y2": 618
+    }
+  },
+  "22": {
+    "description": "Income tax deducted - federal and provincial/territorial income tax",
+    "type": "float",
+    "integer_region": {
+      "x1": 1225,
+      "y1": 215,
+      "x2": 1325,
+      "y2": 244
+    },
+    "float_region": {
+      "x1": 1339,
+      "y1": 217,
+      "x2": 1367,
+      "y2": 240
+    }
+  },
+  "24": {
+    "description": "EI insurable earnings - Employment Insurance insurable earnings",
+    "type": "float",
+    "integer_region": {
+      "x1": 924,
+      "y1": 449,
+      "x2": 1022,
+      "y2": 472
+    },
+    "float_region": {
+      "x1": 1032,
+      "y1": 447,
+      "x2": 1065,
+      "y2": 470
+    }
+  },
+  "26": {
+    "description": "CPP/QPP pensionable earnings - Canada/Quebec Pension Plan pensionable earnings",
+    "type": "float",
+    "integer_region": {
+      "x1": 1228,
+      "y1": 448,
+      "x2": 1327,
+      "y2": 473
+    },
+    "float_region": {
+      "x1": 1339,
+      "y1": 448,
+      "x2": 1370,
+      "y2": 473
+    }
+  },
+  "29": {
+    "description": "Employment code - code indicating type of employment",
+    "type": "string",
+    "region": {
+      "x1": 722,
+      "y1": 405,
+      "x2": 762,
+      "y2": 432
+    }
+  },
+  "34": {
+    "description": "Travel in a prescribed zone - taxable travel benefits in prescribed zones",
+    "type": "float",
+    "integer_region": {
+      "x1": 861,
+      "y1": 809,
+      "x2": 949,
+      "y2": 833
+    },
+    "float_region": {
+      "x1": 959,
+      "y1": 809,
+      "x2": 992,
+      "y2": 830
+    }
+  },
+  "38": {
+    "description": "Pension adjustment - reduces RRSP contribution room",
+    "type": "float",
+    "integer_region": {
+      "x1": 471,
+      "y1": 804,
+      "x2": 577,
+      "y2": 836
+    },
+    "float_region": {
+      "x1": 587,
+      "y1": 806,
+      "x2": 619,
+      "y2": 830
+    }
+  },
+  "40": {
+    "description": "Other taxable allowances and benefits - various taxable benefits",
+    "type": "float",
+    "integer_region": {
+      "x1": 1233,
+      "y1": 802,
+      "x2": 1325,
+      "y2": 835
+    },
+    "float_region": {
+      "x1": 1335,
+      "y1": 806,
+      "x2": 1367,
+      "y2": 832
+    }
+  },
+  "44": {
+    "description": "Union dues - employee union dues deducted",
+    "type": "float",
+    "integer_region": {
+      "x1": 1223,
+      "y1": 522,
+      "x2": 1323,
+      "y2": 541
+    },
+    "float_region": {
+      "x1": 1340,
+      "y1": 519,
+      "x2": 1374,
+      "y2": 540
+    }
+  },
+  "45": {
+    "description": "Number of T4 slips issued - count of T4s for this employee",
+    "type": "integer",
+    "region": {
+      "x1": 723,
+      "y1": 242,
+      "x2": 763,
+      "y2": 270
+    }
+  },
+  "46": {
+    "description": "Charitable donations - donations made through employer",
+    "type": "float",
+    "integer_region": {
+      "x1": 1221,
+      "y1": 593,
+      "x2": 1322,
+      "y2": 617
+    },
+    "float_region": {
+      "x1": 1339,
+      "y1": 593,
+      "x2": 1375,
+      "y2": 612
+    }
+  },
+  "50": {
+    "description": "RPP or DPSP registration number - pension plan registration number",
+    "type": "string",
+    "region": {
+      "x1": 1235,
+      "y1": 665,
+      "x2": 1372,
+      "y2": 684
+    }
+  },
+  "52": {
+    "description": "Pension adjustment - total pension adjustment amount",
+    "type": "float",
+    "integer_region": {
+      "x1": 929,
+      "y1": 665,
+      "x2": 1019,
+      "y2": 686
+    },
+    "float_region": {
+      "x1": 1030,
+      "y1": 665,
+      "x2": 1063,
+      "y2": 685
+    }
+  },
+  "55": {
+    "description": "Employee's PRPP premiums - Pooled Registered Pension Plan premiums",
+    "type": "float",
+    "integer_region": {
+      "x1": 918,
+      "y1": 739,
+      "x2": 1012,
+      "y2": 759
+    },
+    "float_region": {
+      "x1": 1033,
+      "y1": 739,
+      "x2": 1071,
+      "y2": 756
+    }
+  },
+  "56": {
+    "description": "PRPP insurable earnings - Pooled Registered Pension Plan insurable earnings",
+    "type": "float",
+    "integer_region": {
+      "x1": 1226,
+      "y1": 735,
+      "x2": 1324,
+      "y2": 760
+    },
+    "float_region": {
+      "x1": 1338,
+      "y1": 736,
+      "x2": 1375,
+      "y2": 757
+    }
+  }
+}
