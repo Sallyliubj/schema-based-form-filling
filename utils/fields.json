@@ -1,0 +1,147 @@
+{
+    "year": {
+        "desc": "Tax year for this T4",
+        "type": "string",
+        "required": true
+    },
+    "12": {
+        "desc": "Social Insurance Number(SIN), 9-digit number",
+        "type": "string",
+        "required": true
+    },
+    "employee_first_name": {
+        "desc": "Employee's first name",
+        "type": "string",
+        "required": true
+    },
+    "employee_last_name": {
+        "desc": "Employee's last name",
+        "type": "string",
+        "required": true
+    },
+    "employee_address": {
+        "desc": "Employee's address",
+        "type": "string",
+        "required": true
+    },
+    "employer_name": {
+        "desc": "Employer's name",
+        "type": "string",
+        "required": true
+    },
+    "54": {
+        "desc": "Employer's account number / Numéro de compte de l'employeur",
+        "type": "string",
+        "required": false
+    },
+    "10": {
+        "desc": "Province of employment code",
+        "type": "string",
+        "required": false
+    },
+    "14": {
+        "desc": "Employment income - total earnings for the year (salary, wages, bonuses)",
+        "type": "float",
+        "required": true
+    },
+    "16": {
+        "desc": "Employee's CPP contributions - Canada Pension Plan contributions deducted",
+        "type": "float",
+        "required": false
+    },
+    "16A": {
+        "desc": "Employee's second CPP contributions - additional CPP for higher earners",
+        "type": "float",
+        "required": false
+    },
+    "17": {
+        "desc": "Employee's QPP contributions - Quebec Pension Plan contributions (Quebec only)",
+        "type": "float",
+        "required": false
+    },
+    "17A": {
+        "desc": "Employee's second QPP contributions - additional QPP for higher earners",
+        "type": "float",
+        "required": false
+    },
+    "18": {
+        "desc": "Employee's EI premiums - Employment Insurance premiums deducted",
+        "type": "float",
+        "required": false
+    },
+    "20": {
+        "desc": "RPP contributions - Registered Pension Plan contributions",
+        "type": "float",
+        "required": false
+    },
+    "22": {
+        "desc": "Income tax deducted - federal and provincial/territorial income tax",
+        "type": "float",
+        "required": true
+    },
+    "24": {
+        "desc": "EI insurable earnings - Employment Insurance insurable earnings",
+        "type": "float",
+        "required": false
+    },
+    "26": {
+        "desc": "CPP/QPP pensionable earnings - Canada/Quebec Pension Plan pensionable earnings",
+        "type": "float",
+        "required": false
+    },
+    "29": {
+        "desc": "Employment code - code indicating type of employment",
+        "type": "string",
+        "required": false
+    },
+    "34": {
+        "desc": "Travel in a prescribed zone - taxable travel benefits in prescribed zones",
+        "type": "float",
+        "required": false
+    },
+    "38": {
+        "desc": "Pension adjustment - reduces RRSP contribution room",
+        "type": "float",
+        "required": false
+    },
+    "40": {
+        "desc": "Other taxable allowances and benefits - various taxable benefits",
+        "type": "float",
+        "required": false
+    },
+    "44": {
+        "desc": "Union dues - employee union dues deducted",
+        "type": "float",
+        "required": false
+    },
+    "45": {
+        "desc": "Number of T4 slips issued - count of T4s for this employee",
+        "type": "integer",
+        "required": false
+    },
+    "46": {
+        "desc": "Charitable donations - donations made through employer",
+        "type": "float",
+        "required": false
+    },
+    "50": {
+        "desc": "RPP or DPSP registration number - pension plan registration number",
+        "type": "string",
+        "required": false
+    },
+    "52": {
+        "desc": "Pension adjustment - total pension adjustment amount",
+        "type": "float",
+        "required": false
+    },
+    "55": {
+        "desc": "Employee's PRPP premiums - Pooled Registered Pension Plan premiums",
+        "type": "float",
+        "required": false
+    },
+    "56": {
+        "desc": "PRPP insurable earnings - Pooled Registered Pension Plan insurable earnings",
+        "type": "float",
+        "required": false
+    }
+}
