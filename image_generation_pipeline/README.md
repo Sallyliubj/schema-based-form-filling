@@ -1,7 +1,5 @@
 # Image Generation Pipeline for Synthetic Documents
 
-## Overview
-
 This pipeline generates synthetic Canadian tax and financial documents in two stages:
 1. **Value Generation**: Creates realistic form values progressively
 2. **Image Generation**: Produces filled form images from the generated values
@@ -58,10 +56,6 @@ Generates realistic form values using OpenAI API.
     - `output_dir`: Directory to save individual form value files (defaults to `results/values/`)
   - Returns: Dictionary containing user_profile and all generated form data
 
-**Example:**
-```bash
-python value_generator.py
-```
 
 ### `image_generator.py`
 
@@ -91,12 +85,8 @@ Generates filled form images from generated values using two methods:
   - Runs the image generation pipeline for all available forms
   - Returns: Dictionary mapping form_type to output path (or None if failed)
 
-**Example:**
-```bash
-python image_generator.py
-```
 
-## Complete Pipeline Example
+## Example
 
 ```bash
 # Generate form values
