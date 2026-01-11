@@ -18,6 +18,20 @@ Base Profile → Paystub → T4 → T5 → Property Tax → NOA
 
 The pipeline follows a sequential order where each form builds upon the user profile and previously generated data. Forms are conditionally generated based on user attributes.
 
+## Setup
+
+**Required Form Template Images:**
+
+Before running the image generation pipeline, you must upload the following blank form template images to the `images/` directory:
+
+- `noa.jpg` - Notice of Assessment template
+- `paystub.jpg` - Paystub template
+- `property_tax.jpg` - Property Tax template
+- `t4.jpg` - T4 form template
+- `t5.jpg` - T5 form template
+
+These images serve as templates for generating filled forms. The pipeline expects these files to exist in `image_generation_pipeline/images/`.
+
 ## Main Functions
 
 ### `value_generator.py`
@@ -98,7 +112,7 @@ python image_generator.py
 image_generation_pipeline/
 ├── attributes/          # Form field definitions (JSON)
 ├── coordinates/         # Coordinate mappings for T4/T5 (JSON)
-├── images/             # Blank form templates (JPG)
+├── images/             # Form templates (JPG) - user must provide
 ├── results/
 │   ├── values/         # Generated form values (JSON)
 │   └── images/         # Generated filled form images (PNG)
