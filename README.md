@@ -72,7 +72,7 @@ Batch image generation creates filled form images from batch-generated sample va
 Parameters:
 
 - `--input-dir`: Directory containing generated samples (with `values/` subdirectory)
-- `--form-image`: Path to the blank form image template (e.g. `data/t4.png`)
+- `--form-image`: Path to the image template (e.g. `data/t4.png`)
 - `--coordinates`: Path to the coordinates JSON file (e.g. `data/t4_coord.json`)
 - `--max-workers`: Maximum number of parallel workers (default: 3)
 - `--create-degraded`: Also create degraded versions of the images
