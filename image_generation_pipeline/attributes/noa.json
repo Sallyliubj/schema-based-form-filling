@@ -1,0 +1,133 @@
+{
+    "tax_year": {
+        "desc": "Tax year for this Notice of Assessment",
+        "type": "string",
+        "required": true
+    },
+    "sin": {
+        "desc": "Social Insurance Number (SIN), 9-digit number",
+        "type": "string",
+        "required": true
+    },
+    "first_name": {
+        "desc": "Taxpayer's first name",
+        "type": "string",
+        "required": true
+    },
+    "last_name": {
+        "desc": "Taxpayer's last name",
+        "type": "string",
+        "required": true
+    },
+    "address": {
+        "desc": "Taxpayer's mailing address",
+        "type": "string",
+        "required": true
+    },
+    "date_of_assessment": {
+        "desc": "Date the assessment was issued (YYYY-MM-DD)",
+        "type": "string",
+        "required": false
+    },
+    "15000": {
+        "desc": "Line 15000 - Total income from all sources",
+        "type": "float",
+        "required": true
+    },
+    "deductions_from_total_income": {
+        "desc": "Total deductions claimed from total income (RRSP, union dues, childcare, etc.)",
+        "type": "float",
+        "required": false
+    },
+    "23600": {
+        "desc": "Line 23600 - Net income (total income minus deductions)",
+        "type": "float",
+        "required": true
+    },
+    "26000": {
+        "desc": "Line 26000 - Taxable income (net income minus additional deductions)",
+        "type": "float",
+        "required": true
+    },
+    "35000": {
+        "desc": "Line 35000 - Total federal non-refundable tax credits",
+        "type": "float",
+        "required": false
+    },
+    "61500": {
+        "desc": "Line 61500 - Total provincial/territorial non-refundable tax credits",
+        "type": "float",
+        "required": false
+    },
+    "42000": {
+        "desc": "Line 42000 - Net federal tax",
+        "type": "float",
+        "required": false
+    },
+    "42800": {
+        "desc": "Line 42800 - Net provincial/territorial tax",
+        "type": "float",
+        "required": false
+    },
+    "43500": {
+        "desc": "Line 43500 - Total payable (total tax owed before credits/payments)",
+        "type": "float",
+        "required": true
+    },
+    "43700": {
+        "desc": "Line 43700 - Total income tax deducted (from T4s, T5s, etc.)",
+        "type": "float",
+        "required": true
+    },
+    "48600": {
+        "desc": "Line 48600 - Payment on filing (amount paid when filing return)",
+        "type": "float",
+        "required": false
+    },
+    "48200": {
+        "desc": "Line 48200 - Total credits (refundable tax credits like GST/HST credit)",
+        "type": "float",
+        "required": false
+    },
+    "total_payable_minus_credits": {
+        "desc": "Total payable minus total credits",
+        "type": "float",
+        "required": false
+    },
+    "penalties": {
+        "desc": "Late filing or other penalties charged",
+        "type": "float",
+        "required": false
+    },
+    "arrears_interest": {
+        "desc": "Interest on overdue amounts",
+        "type": "float",
+        "required": false
+    },
+    "balance_from_assessment": {
+        "desc": "Balance resulting from this assessment (before interest/penalties)",
+        "type": "float",
+        "required": false
+    },
+    "balance_due": {
+        "desc": "Final balance due (positive = owes CRA, negative = refund)",
+        "type": "float",
+        "required": true
+    },
+    "balance_indicator": {
+        "desc": "Whether balance is DR (debit/owes) or CR (credit/refund)",
+        "type": "string",
+        "required": false
+    },
+    "rrsp_deduction_limit": {
+        "desc": "RRSP deduction limit for the following year",
+        "type": "float",
+        "required": false
+    },
+    "tfsa_contribution_room": {
+        "desc": "TFSA contribution room available",
+        "type": "float",
+        "required": false
+    }
+}
+

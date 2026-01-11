@@ -1,0 +1,74 @@
+[
+    {
+        "attribute": "sin",
+        "description": "Social Insurance Number (SIN), a 9-digit number unique to the individual. Format: 'XXXXXXXXX'."
+    },
+    {
+        "attribute": "first_name",
+        "description": "The first/given name of the person."
+    },
+    {
+        "attribute": "last_name",
+        "description": "The last/family name of the person."
+    },
+    {
+        "attribute": "gender",
+        "description": "The gender of the person: 'male', 'female', or 'non-binary'."
+    },
+    {
+        "attribute": "date_of_birth",
+        "description": "The date of birth in 'YYYY-MM-DD' format."
+    },
+    {
+        "attribute": "marital_status",
+        "description": "The marital status: 'single', 'married', 'common-law', 'divorced', 'separated', or 'widowed'."
+    },
+    {
+        "attribute": "street_address",
+        "description": "The street address including unit/apt number if applicable. Example: '123 Main Street, Unit 4B'."
+    },
+    {
+        "attribute": "city",
+        "description": "The city of residence."
+    },
+    {
+        "attribute": "province_territory",
+        "description": "The province or territory of residence. Options: 'Alberta', 'British Columbia', 'Manitoba', 'New Brunswick', 'Newfoundland and Labrador', 'Northwest Territories', 'Nova Scotia', 'Nunavut', 'Ontario', 'Prince Edward Island', 'Quebec', 'Saskatchewan', 'Yukon'."
+    },
+    {
+        "attribute": "postal_code",
+        "description": "Canadian postal code in format 'A1A 1A1'."
+    },
+    {
+        "attribute": "residency_status",
+        "description": "Canadian residency status for tax purposes: 'resident', 'non-resident', 'deemed resident', 'deemed non-resident'."
+    },
+    {
+        "attribute": "number_of_dependents",
+        "description": "The number of eligible dependents (children under 18 or other qualifying dependents)."
+    },
+    {
+        "attribute": "employment_status",
+        "description": "Current employment status: 'employed', 'self-employed', 'unemployed', 'student', 'retired'."
+    },
+    {
+        "attribute": "occupation",
+        "description": "The person's occupation or job title. Examples: 'Software Engineer', 'Registered Nurse', 'Teacher', 'Accountant', 'Server/Waiter', 'Retail Manager', 'Construction Worker', 'Marketing Manager', 'Lawyer', 'Electrician'."
+    },
+    {
+        "attribute": "employer_name",
+        "description": "The name of the person's employer/company. Leave empty if self-employed or unemployed."
+    },
+    {
+        "attribute": "homeowner_status",
+        "description": "Home ownership status: 'owner', 'renter', 'living_with_family'."
+    },
+    {
+        "attribute": "has_investments",
+        "description": "Whether the person has investment accounts (stocks, dividends, etc.): true or false."
+    },
+    {
+        "attribute": "disability_status",
+        "description": "Whether the person or a dependent qualifies for the Disability Tax Credit: 'self', 'dependent', 'none'."
+    }
+]
