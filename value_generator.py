@@ -287,6 +287,20 @@ def to_full_payload(
     return payload
 
 
+def duplicate_payload(
+    payload: Dict[str, Optional[Union[str, int, float]]]
+) -> Dict[str, Optional[Union[str, int, float]]]:
+    """Duplicate all fields with _copy suffix for form filling."""
+    duplicated_payload = payload.copy()
+    
+    # Add duplicated fields with _copy suffix, but only for original fields (not already copied ones)
+    for field_id, value in payload.items():
+        if not field_id.endswith('_copy'):
+            duplicated_payload[f"{field_id}_copy"] = value
+    
+    return duplicated_payload
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Generate T4 values via OpenAI using only a personal information."
@@ -353,8 +367,11 @@ def main() -> int:
         else:
             print("✓ All validation checks passed")
 
+    # Duplicate all fields with _copy suffix for form filling
+    duplicated_payload = duplicate_payload(payload)
+
     with open(args.output, "w") as f:
-        json.dump(payload, f, indent=4)
+        json.dump(duplicated_payload, f, indent=4)
 
     print(f"Wrote generated values to {args.output}")
 

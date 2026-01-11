@@ -23,12 +23,12 @@ class T4CoordinateMapper:
         self.field_definitions = self._get_field_definitions()
         self.field_index = 0
 
+        # UI settings
+        self.window_name = "T4 Coordinate Mapper"
+
         # Load existing coordinates if available
         if os.path.exists(coord_path):
             self.load_coordinates()
-
-        # UI settings
-        self.window_name = "T4 Coordinate Mapper"
 
     def _get_field_definitions(self):
         with open(self.fields_path, "r") as f:
