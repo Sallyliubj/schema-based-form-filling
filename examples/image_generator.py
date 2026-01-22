@@ -27,10 +27,12 @@ VALUES_DIR = PIPELINE_DIR / "results" / "values"
 OUTPUT_DIR = PIPELINE_DIR / "results" / "images"
 
 # Forms that use pre-defined coordinate-based filling
-PREDEFINED_FORMS = ["t4", "t5"]
+# PREDEFINED_FORMS = ["t4", "t5"]
+PREDEFINED_FORMS = []
 
 # Forms that use LLM-based generation
-LLM_FORMS = ["paystub", "property_tax", "noa"]
+# LLM_FORMS = ["paystub", "property_tax", "noa"]
+LLM_FORMS = ["paystub"]
 
 DEFAULT_MODEL = "gpt-5"
 
@@ -200,7 +202,7 @@ class FormFiller:
 
 def generate_form_with_llm(
     form_type: str,
-    source_image_path: str,
+    reference_images_paths: List[Path],
     values: Dict[str, Any],
     output_path: str,
     model: str = DEFAULT_MODEL,
@@ -210,7 +212,7 @@ def generate_form_with_llm(
 
     Args:
         form_type: Type of form (paystub, property_tax, noa)
-        source_image_path: Path to the blank form template
+        reference_images_paths: List of paths to the reference images
         values: Dictionary of field values to fill
         output_path: Path to save the generated image
         model: OpenAI model to use
@@ -220,15 +222,18 @@ def generate_form_with_llm(
     """
     client = OpenAI()
 
-    with open(source_image_path, "rb") as f:
-        original_image = base64.b64encode(f.read()).decode("utf-8")
+    reference_images_urls = []
+    for reference_image_path in reference_images_paths:
+        with open(reference_image_path, "rb") as f:
+            reference_image_data = base64.b64encode(f.read()).decode("utf-8")
+            reference_images_urls.append(f"data:image/jpeg;base64,{reference_image_data}")
 
     prompt = f"""Generate a {form_type.upper()} form image filled with these values:
 
 {json.dumps(values, indent=2)}
 
 Instructions:
-1. Use the provided image as a reference, but feel free to make variations:
+1. Use the provided image(s) as reference(s), but feel free to make variations:
    - Adjust layout, spacing, or field arrangement
    - Change fonts, colors, or styling
    - Modify header/footer designs
@@ -239,6 +244,16 @@ Instructions:
 5. Use realistic formatting for dates, numbers, and currency
 6. Make the form look authentic and professional
 """
+
+    content = [{
+        "type": "input_image",
+        "image_url": reference_images_url,
+    } for reference_images_url in reference_images_urls]
+    
+    content.append({
+        "type": "input_text",
+        "text": prompt,
+    })
 
     response = client.responses.create(
         model=model,
@@ -251,16 +266,7 @@ Instructions:
         input=[
             {
                 "role": "user",
-                "content": [
-                    {
-                        "type": "input_image",
-                        "image_url": f"data:image/jpeg;base64,{original_image}",
-                    },
-                    {
-                        "type": "input_text",
-                        "text": prompt,
-                    },
-                ],
+                "content": content,
             },
         ],
         tools=[{"type": "image_generation"}],
@@ -333,15 +339,17 @@ def generate_form_image(form_type: str) -> Optional[str]:
         return result
 
     elif form_type in LLM_FORMS:
-        # Use LLM-based generation for other forms
-        image_path = IMAGES_DIR / f"{form_type}.jpg"
+        # Use LLM-based generation for other forms with multiple reference images with {form_type} as the prefix
+        # go through the images directory and get all files with {form_type} as the prefix
+        reference_images = [f for f in os.listdir(IMAGES_DIR) if f.startswith(form_type)]
+        reference_images_paths = [IMAGES_DIR / f for f in reference_images]
 
-        if not image_path.exists():
-            print(f"✗ Template image not found: {image_path}")
+        if not reference_images:
+            print(f"✗ No reference images found for {form_type}")
             return None
 
         print(f"[{form_type.upper()}] Using LLM-based generation...")
-        result = generate_form_with_llm(form_type, str(image_path), values, output_path)
+        result = generate_form_with_llm(form_type, reference_images_paths, values, output_path)
         if result:
             print(f"  → Saved to: {result}")
         else:

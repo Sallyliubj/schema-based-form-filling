@@ -15,3 +15,9 @@ __pycache__
 *.png
 *.pdf
 *.log
+
+results/
+examples/results/
+batch_samples/
+images/
+examples/images/
