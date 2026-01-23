@@ -1,9 +1,10 @@
 # Form-based Document Generation
 
+## Input Configuration
 To generate multiple different type of documents for different users, the configuration files are as follows:
 1. (Required) attributes files: Find all fields needed to be filled in for each document (could be done manually or other tools such as OmniParser). There are some samples in the `examples/attributes` directory.
 2. (Required) sample images: The sample images of the each document. There are some samples in the `examples/images` directory.
-3. (Optional) coordinates files: The coordinates of the fields in the document. There are two types of documents generation: 1. The document has a fixed structure, so the coordinates for each field are required in order to fill in the generated values. 2. The document can have a variable structure, therefore the coordinates are not required. There are some samples in the `examples/coordinates` directory.
+3. (Optional) coordinates files: The coordinates of the fields in the document. There are two types of documents generation: 1. The synthetic document has to follow the structure of the sample document, so the coordinates for each field are required in order to fill in the generated values. 2. The synthetic document can have a different structure, therefore the coordinates are not required. There are some samples in the `examples/coordinates` directory.
 
 
 ## Coordinate Mapping
