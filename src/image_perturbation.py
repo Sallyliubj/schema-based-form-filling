@@ -14,7 +14,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
-from image_polluter import pollute_image_multiple, PollutionMethod
+from src.image_polluter import pollute_image_multiple
 from utils.constant import POLLUTION_PRESETS
 
 logging.basicConfig(
@@ -96,10 +96,9 @@ class ImagePerturbationPipeline:
 
 
     def generate_5_effects_for_image(
-        sample_id: int,
-        input_file: Path,
-        output_dir: Path,
-        input_dir: Path,
+        self,
+        profile_id: int,
+        image_filepath: str,
     ) -> List[Dict[str, any]]:
         """
         Generate 5 pollution effects for a single image:
@@ -118,103 +117,62 @@ class ImagePerturbationPipeline:
             List of result dictionaries for each effect
         """
         results = []
-        sample_name = f"{sample_id:03d}"
-        
-        # Calculate output IDs for this sample (5 outputs per input)
-        base_output_id = (sample_id - 1) * 5 + 1
-        output_ids = [base_output_id + i for i in range(5)]
-        
-        # Load persona data once
-        persona_file = input_dir / "values" / f"sample_{sample_name}_persona.json"
-        persona_data = None
-        
-        if persona_file.exists():
-            with open(persona_file, 'r') as f:
-                persona_data = json.load(f)
-        else:
-            logger.warning(f"Persona file not found for sample {sample_id:03d}: {persona_file}")
-            persona_data = {
-                "id": sample_id,
-                "label": {}
-            }
+        image_filename = image_filepath.split("/")[-1].split(".")[0]
+        output_dir = os.path.join(self.args.output_dir, "images_perturbed", str(profile_id))
+        os.makedirs(output_dir, exist_ok=True)
         
         # Original (no pollution)
         try:
-            output_id = output_ids[0]
-            output_file = output_dir / f"{output_id:03d}.png"
-            output_json = output_dir / f"{output_id:03d}.json"
+            output_file = os.path.join(output_dir, f"{image_filename}_0.png")
             
             # Copy original file
-            shutil.copy2(str(input_file), str(output_file))
+            shutil.copy2(image_filepath, output_file)
             
             metadata = {
-                "id": output_id,
-                "label": persona_data.get("label", {}),
-                "type": get_pollution_type("original")
+                "source": image_filepath,
+                "type": self.get_pollution_type("original")
             }
-            with open(output_json, 'w') as f:
+            with open(os.path.join(output_dir, f"{image_filename}_0.json"), 'w') as f:
                 json.dump(metadata, f, indent=4)
-            
-            results.append({
-                "sample_id": sample_id,
-                "output_id": output_id,
-                "effect": "original",
-                "success": True,
-                "output_file": str(output_file),
-                "output_json": str(output_json),
-                "method": None,
-                "pollution_type": get_pollution_type("original"),
-                "error": None
-            })
-            logger.info(f"Sample {sample_id:03d} → Output {output_id:03d}: original (copied)")
         except Exception as e:
-            logger.error(f"Failed to create original for sample {sample_id:03d}: {e}")
-            results.append({
-                "sample_id": sample_id,
-                "output_id": output_ids[0],
-                "effect": "original",
-                "success": False,
-                "error": str(e)
-            })
+            logger.error(f"Failed to create original for profile {profile_id}: {e}")
         
         # Angle (rotation)
         try:
-            output_id = output_ids[1]
-            output_file = output_dir / f"{output_id:03d}.png"
-            output_json = output_dir / f"{output_id:03d}.json"
+            output_file = os.path.join(output_dir, f"{image_filename}_1.png")
+            output_json = os.path.join(output_dir, f"{image_filename}_1.json")
             
             pollute_image_multiple(
-                input_path=str(input_file),
+                input_path=image_filepath,
                 output_path=str(output_file),
                 methods=["rotation"],
                 **POLLUTION_PRESETS["angle"]
             )
             
             metadata = {
-                "id": output_id,
-                "label": persona_data.get("label", {}),
-                "type": get_pollution_type("rotation")
+                "source": image_filepath,
+                "type": self.get_pollution_type("rotation")
             }
             with open(output_json, 'w') as f:
                 json.dump(metadata, f, indent=4)
             
             results.append({
-                "sample_id": sample_id,
-                "output_id": output_id,
+                "profile_id": profile_id,
+                "source": image_filepath,
                 "effect": "angle",
                 "success": True,
                 "output_file": str(output_file),
                 "output_json": str(output_json),
                 "method": "rotation",
-                "pollution_type": get_pollution_type("rotation"),
+                "pollution_type": self.get_pollution_type("rotation"),
                 "error": None
             })
-            logger.info(f"Sample {sample_id:03d} → Output {output_id:03d}: angle (rotation)")
+            logger.info(f"Profile {profile_id} → Output {output_file}: angle (rotation)")
         except Exception as e:
-            logger.error(f"Failed to create angle effect for sample {sample_id:03d}: {e}")
+            logger.error(f"Failed to create angle effect for profile {profile_id}: {e}")
             results.append({
-                "sample_id": sample_id,
-                "output_id": output_ids[1],
+                "profile_id": profile_id,
+                "source": image_filepath,
                 "effect": "angle",
                 "success": False,
                 "error": str(e)
@@ -222,42 +180,40 @@ class ImagePerturbationPipeline:
         
         # Lightning (lighting with shadows)
         try:
-            output_id = output_ids[2]
-            output_file = output_dir / f"{output_id:03d}.png"
-            output_json = output_dir / f"{output_id:03d}.json"
+            output_file = os.path.join(output_dir, f"{image_filename}_2.png")
+            output_json = os.path.join(output_dir, f"{image_filename}_2.json")
             
             pollute_image_multiple(
-                input_path=str(input_file),
+                input_path=image_filepath,
                 output_path=str(output_file),
                 methods=["lighting"],
                 **POLLUTION_PRESETS["lightning"]
             )
             
             metadata = {
-                "id": output_id,
-                "label": persona_data.get("label", {}),
-                "type": get_pollution_type("lighting")
+                "source": image_filepath,
+                "type": self.get_pollution_type("lighting")
             }
             with open(output_json, 'w') as f:
                 json.dump(metadata, f, indent=4)
             
             results.append({
-                "sample_id": sample_id,
-                "output_id": output_id,
+                "profile_id": profile_id,
+                "source": image_filepath,
                 "effect": "lightning",
                 "success": True,
                 "output_file": str(output_file),
                 "output_json": str(output_json),
                 "method": "lighting",
-                "pollution_type": get_pollution_type("lighting"),
+                "pollution_type": self.get_pollution_type("lighting"),
                 "error": None
             })
-            logger.info(f"Sample {sample_id:03d} → Output {output_id:03d}: lightning (lighting)")
+            logger.info(f"Profile {profile_id} → Output {output_file}: lightning (lighting)")
         except Exception as e:
-            logger.error(f"Failed to create lightning effect for sample {sample_id:03d}: {e}")
+            logger.error(f"Failed to create lightning effect for profile {profile_id}: {e}")
             results.append({
-                "sample_id": sample_id,
-                "output_id": output_ids[2],
+                "profile_id": profile_id,
+                "source": image_filepath,
                 "effect": "lightning",
                 "success": False,
                 "error": str(e)
@@ -265,45 +221,46 @@ class ImagePerturbationPipeline:
         
         # Blur (random choice)
         try:
-            output_id = output_ids[3]
-            output_file = output_dir / f"{output_id:03d}.png"
-            output_json = output_dir / f"{output_id:03d}.json"
+            output_file = os.path.join(output_dir, f"{image_filename}_3.png")
+            output_json = os.path.join(output_dir, f"{image_filename}_3.json")
             
             blur_method = random.choice(["resolution", "motion_blur", "blur"])
-            blur_preset = {blur_method: POLLUTION_PRESETS["blur_options"][blur_method]}
+            blur_preset = {blur_method: POLLUTION_PRESETS["blur"][blur_method]}
             
             pollute_image_multiple(
-                input_path=str(input_file),
+                    input_path=image_filepath,
                 output_path=str(output_file),
                 methods=[blur_method],
                 **blur_preset
             )
             
             metadata = {
-                "id": output_id,
-                "label": persona_data.get("label", {}),
-                "type": get_pollution_type(blur_method)
+                "source": image_filepath,
+                "type": self.get_pollution_type(blur_method)
             }
             with open(output_json, 'w') as f:
                 json.dump(metadata, f, indent=4)
             
             results.append({
-                "sample_id": sample_id,
-                "output_id": output_id,
+                "profile_id": profile_id,
+                "source": image_filepath,
                 "effect": "blur",
                 "success": True,
                 "output_file": str(output_file),
                 "output_json": str(output_json),
                 "method": blur_method,
-                "pollution_type": get_pollution_type(blur_method),
+                "pollution_type": self.get_pollution_type(blur_method),
                 "error": None
             })
-            logger.info(f"Sample {sample_id:03d} → Output {output_id:03d}: blur ({blur_method})")
+            logger.info(f"Profile {profile_id} → Output {output_file}: blur ({blur_method})")
         except Exception as e:
-            logger.error(f"Failed to create blur effect for sample {sample_id:03d}: {e}")
+            logger.error(f"Failed to create blur effect for profile {profile_id}: {e}")
+            import traceback
+            traceback.print_exc()
+            raise
             results.append({
-                "sample_id": sample_id,
-                "output_id": output_ids[3],
+                "profile_id": profile_id,
+                "source": image_filepath,
                 "effect": "blur",
                 "success": False,
                 "error": str(e)
@@ -311,12 +268,11 @@ class ImagePerturbationPipeline:
         
         # Noise (random choice)
         try:
-            output_id = output_ids[4]
-            output_file = output_dir / f"{output_id:03d}.png"
-            output_json = output_dir / f"{output_id:03d}.json"
+            output_file = os.path.join(output_dir, f"{image_filename}_4.png")
+            output_json = os.path.join(output_dir, f"{image_filename}_4.json")
             
             noise_method = random.choice(["stains", "moire", "noise"])
-            noise_preset = POLLUTION_PRESETS["noise_options"][noise_method].copy()
+            noise_preset = POLLUTION_PRESETS["noise"][noise_method].copy()
             
             # For stains, randomize the number
             if noise_method == "stains":
@@ -325,37 +281,36 @@ class ImagePerturbationPipeline:
             noise_preset_dict = {noise_method: noise_preset}
             
             pollute_image_multiple(
-                input_path=str(input_file),
+                input_path=image_filepath,
                 output_path=str(output_file),
                 methods=[noise_method],
                 **noise_preset_dict
             )
             
             metadata = {
-                "id": output_id,
-                "label": persona_data.get("label", {}),
-                "type": get_pollution_type(noise_method)
+                "source": image_filepath,
+                "type": self.get_pollution_type(noise_method)
             }
             with open(output_json, 'w') as f:
                 json.dump(metadata, f, indent=4)
             
             results.append({
-                "sample_id": sample_id,
-                "output_id": output_id,
+                "profile_id": profile_id,
+                "source": image_filepath,
                 "effect": "noise",
                 "success": True,
                 "output_file": str(output_file),
                 "output_json": str(output_json),
                 "method": noise_method,
-                "pollution_type": get_pollution_type(noise_method),
+                "pollution_type": self.get_pollution_type(noise_method),
                 "error": None
             })
-            logger.info(f"Sample {sample_id:03d} → Output {output_id:03d}: noise ({noise_method})")
+            logger.info(f"Profile {profile_id} → Output {output_file}: noise ({noise_method})")
         except Exception as e:
-            logger.error(f"Failed to create noise effect for sample {sample_id:03d}: {e}")
+            logger.error(f"Failed to create noise effect for profile {profile_id}: {e}")
             results.append({
-                "sample_id": sample_id,
-                "output_id": output_ids[4],
+                "profile_id": profile_id,
+                "source": image_filepath,
                 "effect": "noise",
                 "success": False,
                 "error": str(e)
@@ -367,7 +322,7 @@ class ImagePerturbationPipeline:
     def perturb_image(
         self,
         profile_id: int,
-        image_file: str,
+        image_filepath: str,
     ) -> List[Dict[str, any]]:
         """
         Generate 5 pollution effects for a single image.
@@ -376,7 +331,7 @@ class ImagePerturbationPipeline:
             List of results for each of the 5 effects
         """
         try:
-            return self.generate_5_effects_for_image(profile_id, image_file)
+            return self.generate_5_effects_for_image(profile_id, image_filepath)
         except Exception as e:
             logger.error(f"Failed to process profile {profile_id}: {e}")
             # Return error result for all 5 effects
@@ -420,9 +375,9 @@ class ImagePerturbationPipeline:
                 executor.submit(
                     self.perturb_image,
                     profile_id,
-                    image_file,
+                    image_filepath,
                 ): profile_id
-                for profile_id, image_file in images
+                for profile_id, image_filepath in images
             }
             
             # Collect results
@@ -435,7 +390,7 @@ class ImagePerturbationPipeline:
                 logger.info(f"Progress: {images_processed}/{len(images)} images ({images_processed/len(images)*100:.1f}%)")
         
         # Sort results by sample_id and effect
-        all_results.sort(key=lambda x: (x["sample_id"], x.get("effect", "")))
+        all_results.sort(key=lambda x: (x["profile_id"], x.get("effect", "")))
         
         # Analyze statistics
         success_count = sum(1 for r in all_results if r["success"])
@@ -464,7 +419,7 @@ class ImagePerturbationPipeline:
 
         summary = {
             "generation_timestamp": datetime.now().isoformat(),
-            "input_directory": str(input_path),
+            "input_directory": str(synthetic_images_dir),
             "output_directory": str(output_path),
             "method_selection": "5_fixed_effects",
             "total_input_images": len(images),
@@ -482,17 +437,17 @@ class ImagePerturbationPipeline:
         }
         
 
-        summary_file = output_path / "pollution_summary.json"
+        summary_file = os.path.join(output_path, "image_perturbation_summary.json")
         with open(summary_file, "w") as f:
             json.dump(summary, f, indent=4)
         
-        logger.info(f"\nBatch pollution completed!")
+        logger.info("\nImage perturbation completed!")
         logger.info(f"Input images: {len(images)}")
         logger.info(f"Output images: {len(images) * 5} (5 per input)")
         logger.info(f"Success: {success_count}/{len(all_results)} ({success_count/len(all_results)*100:.1f}%)")
         logger.info(f"Failed: {failed_count}/{len(all_results)}")
         logger.info(f"Polluted images saved to: {output_path}")
-        logger.info(f"Metadata JSON files saved alongside images")
+        logger.info("Metadata JSON files saved alongside images")
         logger.info(f"Summary saved to: {summary_file}")
         
 
@@ -501,11 +456,11 @@ class ImagePerturbationPipeline:
             success = effect_success.get(effect, 0)
             logger.info(f"  {effect:12}: {success}/{count} successful")
         
-        logger.info("\nPollution Type Distribution:")
+        logger.info("\nPerturbation Type Distribution:")
         for ptype, count in sorted(type_counts.items(), key=lambda x: x[1], reverse=True):
             logger.info(f"  {ptype:12}: {count} images")
         
-        logger.info("\nMethod Distribution (for blur and noise effects):")
+        logger.info("\nPerturbation Method Distribution (for blur and noise effects):")
         for method, count in sorted(method_counts.items()):
             logger.info(f"  {method:12}: {count} images")
         
