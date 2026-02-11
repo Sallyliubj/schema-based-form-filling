@@ -7,21 +7,18 @@ def build_parser(description: str = "Synthetic document pipeline") -> argparse.A
         "--attributes-dir",
         type=str,
         required=True,
-        default="attributes",
         help="Path to the directory which contains the attributes of the documents",
     )
     parser.add_argument(
         "--sample-images-dir",
         type=str,
         required=True,
-        default="images",
         help="Path to the directory which contains the sample images of the documents",
     )
     parser.add_argument(
         "--coordinates-dir",
         type=str,
         required=False,
-        default="coordinates",
         help="Path to the directory which contains the coordinates of the documents. If the structure of the documents need to be maintained, then the coordinates files need to be provided. Otherwise, the documents will be generated through LLM.",
     )
     parser.add_argument(
@@ -62,5 +59,12 @@ def build_parser(description: str = "Synthetic document pipeline") -> argparse.A
         type=str,
         default="gpt-5",
         help="Model to use for generation (default: gpt-5)",
+    )
+    parser.add_argument(
+        "--provider",
+        type=str,
+        default="openai",
+        choices=["openai", "azure"],
+        help="Provider to use for generation (default: openai)",
     )
     return parser

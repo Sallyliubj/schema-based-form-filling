@@ -10,16 +10,13 @@ and previously generated form data.
 import argparse
 import json
 import os
-import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from datetime import datetime
 import logging
 from pathlib import Path
-import random
 from typing import Any, Dict, List, Optional, Union
 
 
-from openai import OpenAI
+from llms.llm import LLM
 from pydantic import BaseModel, Field
 
 from utils.constant import BASE_ATTRIBUTES_FILE
@@ -152,7 +149,7 @@ Keep the summary concise but complete.
 class ValueGenerationPipeline:
     def __init__(self, args: argparse.Namespace):
         self.args = args
-        self.client = OpenAI()
+        self.llm = LLM(args.model, provider=args.provider)
 
 
     def load_attributes(self, form_type: str = "base") -> Dict[str, Any]:
@@ -260,19 +257,18 @@ class ValueGenerationPipeline:
 
         prompt = GENERATE_USER_PROFILE_PROMPT.format(attributes=formatted_attrs)
 
-        response = self.client.beta.chat.completions.parse(
-            model=self.args.model,
-            messages=[
-                {
-                    "role": "system",
-                    "content": "Generate a realistic user profile. Return structured JSON.",
+        response = self.llm.call(
+            instructions="Generate a realistic user profile.",
+            llm_input=[
+                {   
+                    "role": "user",
+                    "content": prompt,
                 },
-                {"role": "user", "content": prompt},
             ],
-            response_format=UserProfile,
+            schema=UserProfile,
         )
 
-        return response.choices[0].message.parsed
+        return response
 
     def generate_form_values(
         self,
@@ -303,24 +299,18 @@ class ValueGenerationPipeline:
             field_definitions=field_defs,
         )
 
-        response = self.client.beta.chat.completions.parse(
-            model=self.args.model,
-            messages=[
+        response = self.llm.call(
+            instructions="Generate realistic form values based on the user profile and context. Ensure all values are logically consistent and calculations are correct. Return structured data matching the GeneratedFields schema.",
+            llm_input=[
                 {
-                    "role": "system",
-                    "content": (
-                        "Generate realistic form values based on the user profile and context. "
-                        "Ensure all values are logically consistent and calculations are correct. "
-                        "Return structured data matching the GeneratedFields schema."
-                    ),
+                    "role": "user",
+                    "content": prompt,
                 },
-                {"role": "user", "content": prompt},
             ],
-            response_format=GeneratedFields,
+            schema=GeneratedFields,
         )
 
-        generated = response.choices[0].message.parsed
-        return self.fields_to_dict(generated)
+        return self.fields_to_dict(response)
 
 
     def run(self) -> Dict[str, Any]:
