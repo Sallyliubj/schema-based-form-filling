@@ -1,10 +1,52 @@
 # Form-based Document Generation
 
 ## Input Configuration
-To generate multiple different type of documents for different users, the configuration files are as follows:
-1. (Required) attributes files: Find all fields needed to be filled in for each document (could be done manually or other tools such as OmniParser). There are some samples in the `examples/attributes` directory.
-2. (Required) sample images: The sample images of the each document. There are some samples in the `examples/images` directory.
-3. (Optional) coordinates files: The coordinates of the fields in the document. There are two types of documents generation: 1. The synthetic document has to follow the structure of the sample document, so the coordinates for each field are required in order to fill in the generated values. 2. The synthetic document can have a different structure, therefore the coordinates are not required. There are some samples in the `examples/coordinates` directory.
+Use YAML config file (e.g. `config/forms.yaml`) to define each form and how it should be generated.
+
+Each form entry includes:
+1. `form_type`: The form name (e.g. `t4`, `paystub`).
+2. `mode`: Generation mode, either:
+   - `template`: Fill values into a fixed template image using coordinates.
+   - `llm`: Generate a form image using LLM from one or more reference images.
+3. `attributes`: Path to the attributes JSON for the form.
+4. Mode-specific paths:
+   - `template`: requires `image` and `coordinates`.
+   - `llm`: requires `images` (list).
+
+Example `config/forms.yaml`:
+```yaml
+forms:
+  - form_type: t4
+    mode: coordinate
+    attributes: data/forms/t4.json
+    template_image: assets/templates/t4.jpg
+    coordinates: assets/coords/t4.json
+
+  - form_type: t5
+    mode: coordinate
+    attributes: data/forms/t5.json
+    template_image: assets/templates/t5.jpg
+    coordinates: assets/coords/t5.json
+
+  - form_type: paystub
+    mode: llm
+    attributes: data/forms/paystub.json
+    reference_images:
+      - assets/reference/paystub_1.jpg
+      - assets/reference/paystub_2.jpg
+
+  - form_type: property_tax
+    mode: llm
+    attributes: data/forms/property_tax.json
+    reference_images:
+      - assets/reference/property_tax_1.jpg
+
+  - form_type: noa
+    mode: llm
+    attributes: data/forms/noa.json
+    reference_images:
+      - assets/reference/noa_1.jpg
+```
 
 
 ## Coordinate Mapping
@@ -13,12 +55,12 @@ To generate multiple different type of documents for different users, the config
 Parameters:
 
 - `--image`: Path to the document image (e.g. `data/t4.png`)
-- `--fields`: Path to the attributes JSON file (e.g. `examples/attributes/t4.json`)
+- `--fields`: Path to the attributes JSON file (e.g. `data/attributes/t4.json`)
 - `--coordinates`: Path to save the coordinates JSON file (e.g. `examples/coordinates/t4.json`)
 
 Example:
 ```bash
-python coordinate_mapper.py --image examples/images/t4.png --fields examples/attributes/t4.json --coordinates examples/coordinates/t4.json
+python coordinate_mapper.py --image data/images/t4.jpg --fields data/attributes/t4.json --coordinates data/coordinates/t4.json
 ```
 
 ## Run the pipeline
@@ -32,11 +74,7 @@ Apply multiple perturbation effects (i.e. rotation, lighting, blur, noise) to th
 
 Parameters:
 
-- `--attributes-dir`: Path to the directory which contains the attributes of the documents (required)
-- `--sample-images-dir`: Path to the directory which contains the sample images of the documents (required)
-- `--coordinates-dir`: Path to the directory which contains the coordinates of the documents. If the structure of the documents need to be maintained, then the coordinates files need to be provided. Otherwise, the documents will be generated through LLM (optional)
-- `--llm-forms`: List of forms that need to be generated through LLM (optional, default: `["paystub", "property_tax", "noa"]`)
-- `--value-filling-forms`: List of forms that need to be generated through value filling based on the coordinates (optional, default: `["t4", "t5"]`)
+- `--config`: Path to YAML config file describing each form (`template` or `llm`) and its paths (required)
 - `--output-dir`: Path to the output directory which will contain the generated values and images (required, default: `results`)
 - `--max-workers`: Maximum number of parallel workers (optional, default: `4`)
 - `--num-persona`: Number of personas to generate (optional, default: `10`)
@@ -55,7 +93,7 @@ Note: The `--text-model` and `--image-model` parameters should be the deployment
 
 Example:
 ```bash
-python main.py --attributes-dir examples/attributes --sample-images-dir examples/images --coordinates-dir examples/coordinates --output-dir ./results --max-workers 4 --num-persona 2
+python main.py --config config/forms.yaml --output-dir ./results --max-workers 4 --num-persona 2
 ```
 
 ## Result Structure

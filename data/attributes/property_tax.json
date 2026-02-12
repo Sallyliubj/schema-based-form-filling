@@ -1,0 +1,203 @@
+{
+    "tax_year": {
+        "desc": "Property tax year",
+        "type": "string",
+        "required": true
+    },
+    "billing_date": {
+        "desc": "Date the property tax bill was issued (YYYY-MM-DD)",
+        "type": "string",
+        "required": true
+    },
+    "roll_number": {
+        "desc": "Property roll number - unique identifier for the property",
+        "type": "string",
+        "required": true
+    },
+    "account_number": {
+        "desc": "Property tax account number",
+        "type": "string",
+        "required": false
+    },
+    "access_code": {
+        "desc": "Online access code for property tax account",
+        "type": "string",
+        "required": false
+    },
+    "owner_first_name": {
+        "desc": "Property owner's first name",
+        "type": "string",
+        "required": true
+    },
+    "owner_last_name": {
+        "desc": "Property owner's last name",
+        "type": "string",
+        "required": true
+    },
+    "co_owner_name": {
+        "desc": "Co-owner's full name (if applicable)",
+        "type": "string",
+        "required": false
+    },
+    "mailing_address": {
+        "desc": "Owner's mailing address (may differ from property address)",
+        "type": "string",
+        "required": false
+    },
+    "property_address": {
+        "desc": "Civic/property address being taxed",
+        "type": "string",
+        "required": true
+    },
+    "legal_description": {
+        "desc": "Legal description of the property (lot, plan, etc.)",
+        "type": "string",
+        "required": false
+    },
+    "municipality_name": {
+        "desc": "Name of the municipality issuing the tax bill",
+        "type": "string",
+        "required": true
+    },
+    "municipality_address": {
+        "desc": "Municipality's mailing address",
+        "type": "string",
+        "required": false
+    },
+    "municipality_phone": {
+        "desc": "Municipality tax office phone number",
+        "type": "string",
+        "required": false
+    },
+    "tax_class": {
+        "desc": "Property tax class (e.g., 'R-T EP' for residential)",
+        "type": "string",
+        "required": false
+    },
+    "assessed_value": {
+        "desc": "Property assessed value for tax calculation",
+        "type": "float",
+        "required": true
+    },
+    "municipal_tax_rate": {
+        "desc": "Municipal tax rate (as decimal, e.g., 0.00499117)",
+        "type": "float",
+        "required": false
+    },
+    "municipal_levy": {
+        "desc": "Municipal levy amount",
+        "type": "float",
+        "required": true
+    },
+    "region_tax_rate": {
+        "desc": "Regional tax rate (as decimal)",
+        "type": "float",
+        "required": false
+    },
+    "region_levy": {
+        "desc": "Regional levy amount",
+        "type": "float",
+        "required": true
+    },
+    "education_tax_rate": {
+        "desc": "Education tax rate (as decimal)",
+        "type": "float",
+        "required": false
+    },
+    "education_levy": {
+        "desc": "Education levy amount",
+        "type": "float",
+        "required": true
+    },
+    "local_improvements": {
+        "desc": "Local improvement charges (sidewalks, sewers, etc.)",
+        "type": "float",
+        "required": false
+    },
+    "special_charges": {
+        "desc": "Special charges or assessments",
+        "type": "float",
+        "required": false
+    },
+    "tax_levy_subtotal": {
+        "desc": "Subtotal of all tax levies (municipal + region + education)",
+        "type": "float",
+        "required": false
+    },
+    "final_taxes": {
+        "desc": "Final tax amount for the year",
+        "type": "float",
+        "required": false
+    },
+    "interim_taxes_paid": {
+        "desc": "Interim taxes already paid",
+        "type": "float",
+        "required": false
+    },
+    "total_amount_due": {
+        "desc": "Total amount due for the tax year",
+        "type": "float",
+        "required": true
+    },
+    "arrears": {
+        "desc": "Outstanding taxes from previous years",
+        "type": "float",
+        "required": false
+    },
+    "penalties_interest": {
+        "desc": "Penalties and interest charges",
+        "type": "float",
+        "required": false
+    },
+    "credits_adjustments": {
+        "desc": "Credits or adjustments applied",
+        "type": "float",
+        "required": false
+    },
+    "installment_1_due_date": {
+        "desc": "First installment due date (YYYY-MM-DD)",
+        "type": "string",
+        "required": false
+    },
+    "installment_1_amount": {
+        "desc": "First installment amount",
+        "type": "float",
+        "required": false
+    },
+    "installment_2_due_date": {
+        "desc": "Second installment due date (YYYY-MM-DD)",
+        "type": "string",
+        "required": false
+    },
+    "installment_2_amount": {
+        "desc": "Second installment amount",
+        "type": "float",
+        "required": false
+    },
+    "installment_3_due_date": {
+        "desc": "Third installment due date (YYYY-MM-DD)",
+        "type": "string",
+        "required": false
+    },
+    "installment_3_amount": {
+        "desc": "Third installment amount",
+        "type": "float",
+        "required": false
+    },
+    "installment_4_due_date": {
+        "desc": "Fourth installment due date (YYYY-MM-DD)",
+        "type": "string",
+        "required": false
+    },
+    "installment_4_amount": {
+        "desc": "Fourth installment amount",
+        "type": "float",
+        "required": false
+    },
+    "payment_method": {
+        "desc": "Available payment methods",
+        "type": "string",
+        "required": false
+    }
+}
+
