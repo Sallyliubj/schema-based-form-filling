@@ -17,14 +17,6 @@ from typing import Dict, List, Optional, Tuple
 from src.image_polluter import pollute_image_multiple
 from utils.constant import POLLUTION_PRESETS
 
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler('image_perturbation.log'),
-        logging.StreamHandler()
-    ]
-)
 logger = logging.getLogger(__name__)
 
 class ImagePerturbationPipeline:

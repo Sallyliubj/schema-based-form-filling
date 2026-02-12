@@ -30,6 +30,29 @@ Based on the generated values and the sample images of each document, generate t
 3. Image Perturbation
 Apply multiple perturbation effects (i.e. rotation, lighting, blur, noise) to the synthetic document images from step 2 to generate more diverse images.
 
+Parameters:
+
+- `--attributes-dir`: Path to the directory which contains the attributes of the documents (required)
+- `--sample-images-dir`: Path to the directory which contains the sample images of the documents (required)
+- `--coordinates-dir`: Path to the directory which contains the coordinates of the documents. If the structure of the documents need to be maintained, then the coordinates files need to be provided. Otherwise, the documents will be generated through LLM (optional)
+- `--llm-forms`: List of forms that need to be generated through LLM (optional, default: `["paystub", "property_tax", "noa"]`)
+- `--value-filling-forms`: List of forms that need to be generated through value filling based on the coordinates (optional, default: `["t4", "t5"]`)
+- `--output-dir`: Path to the output directory which will contain the generated values and images (required, default: `results`)
+- `--max-workers`: Maximum number of parallel workers (optional, default: `4`)
+- `--num-persona`: Number of personas to generate (optional, default: `10`)
+- `--provider`: Provider to use for generation (optional, default: `openai`, choices: `openai`, `azure`)
+- `--text-model`: Model to use for text generation (optional, default: `gpt-5`)
+- `--image-model`: Model to use for image generation (optional, default: `gpt-5`)
+
+### Azure OpenAI Configuration
+When using `--provider azure`, the following environment variables are required:
+- `AZURE_CLIENT_ID`: The client ID of the user-assigned managed identity.
+- `AZURE_RESOURCE_NAME`: The name of the Azure OpenAI resource.
+- `AZURE_OPENAI_API_VERSION`: The API version to use (e.g. `2024-02-15-preview`).
+
+Note: The `--text-model` and `--image-model` parameters should be the deployment names of the models in your Azure OpenAI resource.
+
+
 Example:
 ```bash
 python main.py --attributes-dir examples/attributes --sample-images-dir examples/images --coordinates-dir examples/coordinates --output-dir ./results --max-workers 4 --num-persona 2
