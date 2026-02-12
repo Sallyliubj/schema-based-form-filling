@@ -1,5 +1,12 @@
 import argparse
 import logging
+from typing import Any, Dict, List, Tuple
+
+# Optional dependency: PyYAML is required to load the configuration file.
+try:
+    import yaml  # type: ignore
+except Exception:  # pragma: no cover
+    yaml = None
 
 
 def setup_logging() -> None:
@@ -20,36 +27,10 @@ def setup_logging() -> None:
 def build_parser(description: str = "Synthetic document pipeline") -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument(
-        "--attributes-dir",
+        "--config",
         type=str,
         required=True,
-        help="Path to the directory which contains the attributes of the documents",
-    )
-    parser.add_argument(
-        "--sample-images-dir",
-        type=str,
-        required=True,
-        help="Path to the directory which contains the sample images of the documents",
-    )
-    parser.add_argument(
-        "--coordinates-dir",
-        type=str,
-        required=False,
-        help="Path to the directory which contains the coordinates of the documents. If the structure of the documents need to be maintained, then the coordinates files need to be provided. Otherwise, the documents will be generated through LLM.",
-    )
-    parser.add_argument(
-        "--llm-forms",
-        type=list,
-        required=False,
-        default=["paystub", "property_tax", "noa"],
-        help="List of forms that need to be generated through LLM",
-    )
-    parser.add_argument(
-        "--value-filling-forms",
-        type=list,
-        required=False,
-        default=["t4", "t5"],
-        help="List of forms that need to be generated through value filling based on the coordinates",
+        help="Path to a YAML configuration file specifying per-form settings (attributes, image assets, coordinates, mode).",
     )
     parser.add_argument(
         "--output-dir",
@@ -90,3 +71,102 @@ def build_parser(description: str = "Synthetic document pipeline") -> argparse.A
         help="Provider to use for generation (default: openai)",
     )
     return parser
+
+
+def load_yaml_config(config_path: str) -> Dict[str, Any]:
+    """
+    Load and minimally validate the YAML configuration.
+
+    Expected structure:
+    forms:
+      - form_type: t4
+        mode: template            # one of: template | llm
+        attributes: path/to/t4.json
+        image: path/to/t4.jpg     # required and only one image for template mode
+        coordinates: path/to/t4_coords.json # required if mode=template
+      - form_type: paystub
+        mode: llm
+        attributes: path/to/paystub.json
+        images:                # list of image paths for LLM conditioning
+          - path/to/paystub1.jpg
+          - path/to/paystub2.jpg
+    """
+    if yaml is None:
+        raise RuntimeError(
+            "PyYAML is required to load --config. Please install it with `pip install pyyaml`."
+        )
+    with open(config_path, "r", encoding="utf-8") as f:
+        data = yaml.safe_load(f) or {}
+
+    if not isinstance(data, dict):
+        raise ValueError("Config root must be a mapping (YAML object).")
+    if "forms" not in data or not isinstance(data["forms"], list):
+        raise ValueError("Config must contain a top-level 'forms' list.")
+
+    for idx, entry in enumerate(data["forms"]):
+        if not isinstance(entry, dict):
+            raise ValueError(f"forms[{idx}] must be a mapping.")
+        if "form_type" not in entry or not entry["form_type"]:
+            raise ValueError(f"forms[{idx}] is missing required 'form_type'.")
+        if "mode" not in entry or entry["mode"] not in ("template", "llm"):
+            raise ValueError(
+                f"forms[{idx}] must declare 'mode' as 'template' or 'llm'."
+            )
+        if "attributes" not in entry:
+            raise ValueError(f"forms[{idx}] is missing required 'attributes' path.")
+        if entry["mode"] == "template":
+            if "image" not in entry or "coordinates" not in entry:
+                raise ValueError(
+                    f"forms[{idx}] (template) must include 'image' and 'coordinates'."
+                )
+        if entry["mode"] == "llm":
+            if "images" not in entry or not isinstance(entry["images"], list):
+                raise ValueError(
+                    f"forms[{idx}] (llm) must include 'images' as a list."
+                )
+    return data
+
+
+def extract_form_mappings(
+    config: Dict[str, Any],
+) -> Tuple[
+    Dict[str, str],  # form_type -> attributes path
+    List[str],       # value_filling_forms (coordinate)
+    List[str],       # llm_forms
+    Dict[str, List[str]],  # form_type -> images (llm)
+    Dict[str, str],        # form_type -> image (template)
+    Dict[str, str],        # form_type -> coordinates path (template)
+]:
+    """
+    Build convenient lookup maps from loaded config.
+    """
+    form_to_attributes: Dict[str, str] = {}
+    value_filling_forms: List[str] = []
+    llm_forms: List[str] = []
+    form_to_reference_images: Dict[str, List[str]] = {}
+    form_to_template_image: Dict[str, str] = {}
+    form_to_coordinates: Dict[str, str] = {}
+
+    for entry in config.get("forms", []):
+        form_type = entry["form_type"]
+        # Attributes
+        form_to_attributes[form_type] = entry["attributes"]
+        # Mode-specific fields
+        if entry["mode"] == "template":
+            if form_type not in value_filling_forms:
+                value_filling_forms.append(form_type)
+            form_to_template_image[form_type] = entry["image"]
+            form_to_coordinates[form_type] = entry["coordinates"]
+        elif entry["mode"] == "llm":
+            if form_type not in llm_forms:
+                llm_forms.append(form_type)
+            form_to_reference_images[form_type] = entry.get("images", [])
+
+    return (
+        form_to_attributes,
+        value_filling_forms,
+        llm_forms,
+        form_to_reference_images,
+        form_to_template_image,
+        form_to_coordinates,
+    )

@@ -149,7 +149,13 @@ class ValueGenerationPipeline:
         if form_type == "base":
             path = BASE_ATTRIBUTES_FILE
         else:
-            path = os.path.join(self.args.attributes_dir, f"{form_type}.json")
+            try:
+                path = self.args.form_to_attributes[form_type]
+            except Exception:
+                raise FileNotFoundError(
+                    f"No attributes mapping found for form '{form_type}'. "
+                    f"Ensure it is defined in the YAML config."
+                )
         if not os.path.exists(path):
             raise FileNotFoundError(f"Attributes file not found: {path}")
         with open(path, "r", encoding="utf-8") as f:
@@ -320,14 +326,13 @@ class ValueGenerationPipeline:
         print("Starting Value Generation Process")
         print("=" * 60)
 
-        attributes_dir = Path(self.args.attributes_dir)
         output_dir = Path(self.args.output_dir)
         
-        # The name of each document want to synthetically generate, reading from the attributes directory.
-        documents = [f.stem for f in attributes_dir.glob("*.json")]
+        # Determine target documents from config mappings.
+        documents = list(self.args.form_to_attributes.keys())
 
         # Step 1: Generate base user profile
-        print(f"Generating user profile...")
+        print("Generating user profile...")
         user_profiles = self.generate_batch_user_profiles()
 
         # Save user profile
