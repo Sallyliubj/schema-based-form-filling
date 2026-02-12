@@ -2,12 +2,14 @@
 
 import argparse
 
-from src.utils import build_parser
+from src.utils import build_parser, setup_logging
 from src.value_generation import ValueGenerationPipeline
 from src.image_generation import ImageGenerationPipeline
 from src.image_perturbation import ImagePerturbationPipeline
 
 def run_pipeline(args: argparse.Namespace) -> None:
+    setup_logging()
+    
     value_generator = ValueGenerationPipeline(args=args)
     value_generator.run()
     image_generator = ImageGenerationPipeline(args=args)

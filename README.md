@@ -40,8 +40,18 @@ Parameters:
 - `--output-dir`: Path to the output directory which will contain the generated values and images (required, default: `results`)
 - `--max-workers`: Maximum number of parallel workers (optional, default: `4`)
 - `--num-persona`: Number of personas to generate (optional, default: `10`)
-- `--model`: Model to use for generation (optional, default: `gpt-5`)
 - `--provider`: Provider to use for generation (optional, default: `openai`, choices: `openai`, `azure`)
+- `--text-model`: Model to use for text generation (optional, default: `gpt-5`)
+- `--image-model`: Model to use for image generation (optional, default: `gpt-5`)
+
+### Azure OpenAI Configuration
+When using `--provider azure`, the following environment variables are required:
+- `AZURE_CLIENT_ID`: The client ID of the user-assigned managed identity.
+- `AZURE_RESOURCE_NAME`: The name of the Azure OpenAI resource.
+- `AZURE_OPENAI_API_VERSION`: The API version to use (e.g. `2024-02-15-preview`).
+
+Note: The `--text-model` and `--image-model` parameters should be the deployment names of the models in your Azure OpenAI resource.
+
 
 Example:
 ```bash

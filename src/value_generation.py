@@ -21,14 +21,6 @@ from pydantic import BaseModel, Field
 
 from utils.constant import BASE_ATTRIBUTES_FILE
 
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler('value_generation.log'),
-        logging.StreamHandler()
-    ]
-)
 logger = logging.getLogger(__name__)
 
 
@@ -149,7 +141,7 @@ Keep the summary concise but complete.
 class ValueGenerationPipeline:
     def __init__(self, args: argparse.Namespace):
         self.args = args
-        self.llm = LLM(args.model, provider=args.provider)
+        self.llm = LLM(args.text_model, provider=args.provider)
 
 
     def load_attributes(self, form_type: str = "base") -> Dict[str, Any]:

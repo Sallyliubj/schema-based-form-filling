@@ -183,7 +183,7 @@ class FormFiller:
 class ImageGenerationPipeline:
     def __init__(self, args: argparse.Namespace):
         self.args = args
-        self.llm = LLM(args.model, provider=args.provider)
+        self.llm = LLM(args.image_model, type="image", provider=args.provider)
 
     def generate_form_with_llm(
         self,
@@ -200,7 +200,6 @@ class ImageGenerationPipeline:
             reference_images_paths: List of paths to the reference images
             values: Dictionary of field values to fill
             output_path: Path to save the generated image
-            model: OpenAI model to use
 
         Returns:
             Path to generated image, or None if failed

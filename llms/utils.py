@@ -24,16 +24,3 @@ def get_azure_token_provider(client_id: str | None = None) -> Callable[[], str]:
     )
 
     return get_bearer_token_provider(credential, AZURE_COGNITIVE_SERVICES_SCOPE)
-
-
-def check_azure_env_vars() -> None:
-    """
-    Check if the Azure environment variables are set.
-    """
-    client_id = os.getenv("AZURE_CLIENT_ID")
-    api_version = os.getenv("AZURE_OPENAI_API_VERSION")
-    deployment_name = os.getenv("AZURE_OPENAI_DEPLOYMENT_NAME")
-    if not client_id or not api_version or not deployment_name:
-        raise ValueError(
-            "AZURE_CLIENT_ID, AZURE_OPENAI_API_VERSION, and AZURE_OPENAI_DEPLOYMENT_NAME are required for initializing Azure OpenAI Agent!"
-        )

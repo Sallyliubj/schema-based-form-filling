@@ -1,4 +1,20 @@
 import argparse
+import logging
+
+
+def setup_logging() -> None:
+    """Configure logging for the pipeline."""
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(levelname)s - %(message)s',
+        handlers=[
+            logging.StreamHandler()
+        ]
+    )
+    
+    # Disable verbose Azure logging
+    logging.getLogger("azure.core.pipeline.policies.http_logging_policy").setLevel(logging.WARNING)
+    logging.getLogger("azure.identity").setLevel(logging.WARNING)
 
 
 def build_parser(description: str = "Synthetic document pipeline") -> argparse.ArgumentParser:
@@ -55,10 +71,16 @@ def build_parser(description: str = "Synthetic document pipeline") -> argparse.A
         help="Number of personas to generate (default: 10)",
     )
     parser.add_argument(
-        "--model",
+        "--text-model",
         type=str,
         default="gpt-5",
-        help="Model to use for generation (default: gpt-5)",
+        help="Model to use for text generation (default: gpt-5)",
+    )
+    parser.add_argument(
+        "--image-model",
+        type=str,
+        default="gpt-5",
+        help="Model to use for image generation (default: gpt-5)",
     )
     parser.add_argument(
         "--provider",

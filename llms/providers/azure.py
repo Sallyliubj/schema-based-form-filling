@@ -4,7 +4,7 @@ import time
 from typing import Any
 import base64
 
-from openai import AsyncAzureOpenAI, AzureOpenAI, RateLimitError
+from openai import OpenAI, AzureOpenAI, RateLimitError
 
 from ..base_llm import BaseLLM
 from ..types import InputItem
@@ -17,18 +17,20 @@ class AzureLLM(BaseLLM):
     def __init__(
         self,
         model: str,
+        type: str = "text",
         provider: str | None = None,
         temperature: float | None = None,
         **kwargs: object,
     ) -> None:
         super().__init__(model, provider, temperature, **kwargs)
 
-        azure_endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
+        self.type = type
+        azure_resource_name = os.getenv("AZURE_RESOURCE_NAME")
         api_version = os.getenv("AZURE_OPENAI_API_VERSION")
         azure_client_id = os.getenv("AZURE_CLIENT_ID")
 
-        if not azure_endpoint:
-            raise ValueError("AZURE_OPENAI_ENDPOINT environment variable is required")
+        if not azure_resource_name:
+            raise ValueError("AZURE_RESOURCE_NAME environment variable is required")
         if not api_version:
             raise ValueError(
                 "AZURE_OPENAI_API_VERSION environment variable is required"
@@ -38,16 +40,18 @@ class AzureLLM(BaseLLM):
 
         token_provider = get_azure_token_provider(azure_client_id)
 
-        self.client = AzureOpenAI(
-            api_version=api_version,
-            azure_endpoint=azure_endpoint,
-            azure_ad_token_provider=token_provider,
-        )
-        self.async_client = AsyncAzureOpenAI(
-            api_version=api_version,
-            azure_endpoint=azure_endpoint,
-            azure_ad_token_provider=token_provider,
-        )
+        if type == "image":
+            self.client = OpenAI(
+                base_url=f"https://{azure_resource_name}/openai/v1/",
+                api_key=token_provider,
+                default_headers={"api-version": "preview"}
+            )
+        else:
+            self.client = AzureOpenAI(
+                api_version=api_version,
+                azure_endpoint=f"https://{azure_resource_name}.openai.azure.com/",
+                azure_ad_token_provider=token_provider,
+            )
 
     def _prepare_params(
         self,
@@ -56,41 +60,51 @@ class AzureLLM(BaseLLM):
     ) -> dict[str, Any]:
         params: dict[str, Any] = {
             "model": self.model,
-            "input": llm_input,
         }
+
+        if self.type == "text":
+            messages = []
+            system_prompt = ""
+            for item in llm_input:
+                if item.get("role") == "system":
+                    system_prompt = item.get("content")
+
+            # Instructions override the system prompt
+            messages.append({
+                "role": "system",
+                "content": kwargs.get("instructions", system_prompt),
+            })
+
+            for item in llm_input:
+                if item.get("role") == "user":
+                    messages.append(item)
+            params["messages"] = messages
+
+        elif self.type == "image":
+            image_input = ""
+            prompt_parts = []
+            if kwargs.get("instructions"):
+                prompt_parts.append(kwargs.get("instructions"))
+            
+            for item in llm_input:
+                if item.get("role") == "user":
+                    content = item.get("content")
+                    if isinstance(content, str):
+                        prompt_parts.append(content)
+                    elif isinstance(content, list):
+                        for part in content:
+                            if part.get("type") == "input_text":
+                                prompt_parts.append(part.get("text"))
+                            elif part.get("type") == "input_image":
+                                image_input = part.get("image_url")
+
+            params["prompt"] = "\n\n".join(prompt_parts)
+            params["image"] = image_input
 
         if self.temperature:
             params["temperature"] = self.temperature
-        if kwargs.get("instructions"):
-            params["instructions"] = kwargs.get("instructions")
-        if kwargs.get("schema"):
-            params["text_format"] = kwargs.get("schema")
-        if kwargs.get("tools"):
-            params["tools"] = kwargs.get("tools")
 
         return params
-
-    def call(
-        self,
-        llm_input: str | list[InputItem],
-        **kwargs: Any,
-    ) -> str:
-        params = self._prepare_params(llm_input, **kwargs)
-        response = self.client.responses.parse(**params)
-        # For structured output, return the parsed output
-        if kwargs.get("schema"):
-            return response.output_parsed
-        # For image generation, return the image data
-        if any(tool.get("type") == "image_generation" for tool in kwargs.get("tools", [])):
-            image_data = [
-                output.result
-                for output in response.output
-                if output.type == "image_generation_call"
-            ]
-            if image_data:
-                return {"image_data": base64.b64decode(image_data[0])}
-        # For text output, return the text (default)
-        return response.output_text
 
     def call(
         self,
@@ -99,25 +113,32 @@ class AzureLLM(BaseLLM):
         base_delay: float = 1.0,
         **kwargs: Any,
     ) -> str:
-        params = self._prepare_params(llm_input)
+        params = self._prepare_params(llm_input, **kwargs)
 
         for attempt in range(max_retries):
             try:
-                response = self.client.responses.parse(**params)
                 # For structured output, return the parsed output
                 if kwargs.get("schema"):
-                    return response.output_parsed
+                    response = self.client.chat.completions.parse(
+                        **params,
+                        response_format=kwargs.get("schema"),
+                    )
+                    if response.choices[0].message.parsed:
+                        return response.choices[0].message.parsed
+                    return response.choices[0].message.content
                 # For image generation, return the image data
-                if any(tool.get("type") == "image_generation" for tool in kwargs.get("tools", [])):
-                    image_data = [
-                        output.result
-                        for output in response.output
-                        if output.type == "image_generation_call"
-                    ]
-                    if image_data:
-                        return {"image_data": base64.b64decode(image_data[0])}
+                elif any(tool.get("type") == "image_generation" for tool in kwargs.get("tools", [])):
+                    response = self.client.images.generate(
+                        **params,
+                        response_format="b64_json",
+                    )
+                    b64_data = response.data[0].b64_json
+                    image_bytes = base64.b64decode(b64_data)
+                    return {"image_data": image_bytes}
                 # For text output, return the text (default)
-                return response.output_text
+                else:
+                    response = self.client.chat.completions.create(**params)
+                    return response.choices[0].message.content
 
             except RateLimitError as e:
                 # Check for Retry-After header in the error response
@@ -130,17 +151,15 @@ class AzureLLM(BaseLLM):
                 else:
                     logger.error(
                         f"[red]Rate limited (429). Max retries ({max_retries}) exceeded.[/]",
-                        extra={"console": True},
                     )
                     raise e
 
             except Exception as e:
                 if attempt < max_retries - 1:
-                    logger.warning(f"Error processing prompt: {llm_input}. Error: {e}")
+                    logger.warning(f"Error: {e}")
                     continue
                 else:
                     logger.error(
-                        f"[red]Max retries ({max_retries}) exceeded for processing prompt: {llm_input}. Error: {e}[/]",
-                        extra={"console": True},
+                        f"[red]Max retries ({max_retries}) exceeded. Error: {e}[/]",
                     )
                     raise e
