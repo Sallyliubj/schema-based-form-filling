@@ -14,7 +14,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 from typing import Dict, Any, Optional, List
 
-from openai import OpenAI
+from llms.llm import LLM
 
 
 class FormFiller:
@@ -183,7 +183,7 @@ class FormFiller:
 class ImageGenerationPipeline:
     def __init__(self, args: argparse.Namespace):
         self.args = args
-        self.client = OpenAI()
+        self.llm = LLM(args.image_model, type="image", provider=args.provider)
 
     def generate_form_with_llm(
         self,
@@ -200,7 +200,6 @@ class ImageGenerationPipeline:
             reference_images_paths: List of paths to the reference images
             values: Dictionary of field values to fill
             output_path: Path to save the generated image
-            model: OpenAI model to use
 
         Returns:
             Path to generated image, or None if failed
@@ -238,15 +237,14 @@ class ImageGenerationPipeline:
             "text": prompt,
         })
 
-        response = self.client.responses.create(
-            model=self.args.model,
+        response = self.llm.call(
             instructions=(
                 "You are generating a filled form document based on a reference image. "
                 "You may introduce visual variations - different layouts, fonts, colors, "
                 "or styling - while keeping it recognizable as the same type of document. "
                 "Place the provided values into appropriate fields."
             ),
-            input=[
+            llm_input=[
                 {
                     "role": "user",
                     "content": content,
@@ -255,16 +253,10 @@ class ImageGenerationPipeline:
             tools=[{"type": "image_generation"}],
         )
 
-        image_data = [
-            output.result
-            for output in response.output
-            if output.type == "image_generation_call"
-        ]
-
-        if image_data:
+        if response.get("image_data"):
             os.makedirs(os.path.dirname(output_path), exist_ok=True)
             with open(output_path, "wb") as f:
-                f.write(base64.b64decode(image_data[0]))
+                f.write(response["image_data"])
             return output_path
         else:
             return None

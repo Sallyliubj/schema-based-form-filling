@@ -1,4 +1,20 @@
 import argparse
+import logging
+
+
+def setup_logging() -> None:
+    """Configure logging for the pipeline."""
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(levelname)s - %(message)s',
+        handlers=[
+            logging.StreamHandler()
+        ]
+    )
+    
+    # Disable verbose Azure logging
+    logging.getLogger("azure.core.pipeline.policies.http_logging_policy").setLevel(logging.WARNING)
+    logging.getLogger("azure.identity").setLevel(logging.WARNING)
 
 
 def build_parser(description: str = "Synthetic document pipeline") -> argparse.ArgumentParser:
@@ -7,21 +23,18 @@ def build_parser(description: str = "Synthetic document pipeline") -> argparse.A
         "--attributes-dir",
         type=str,
         required=True,
-        default="attributes",
         help="Path to the directory which contains the attributes of the documents",
     )
     parser.add_argument(
         "--sample-images-dir",
         type=str,
         required=True,
-        default="images",
         help="Path to the directory which contains the sample images of the documents",
     )
     parser.add_argument(
         "--coordinates-dir",
         type=str,
         required=False,
-        default="coordinates",
         help="Path to the directory which contains the coordinates of the documents. If the structure of the documents need to be maintained, then the coordinates files need to be provided. Otherwise, the documents will be generated through LLM.",
     )
     parser.add_argument(
@@ -58,9 +71,22 @@ def build_parser(description: str = "Synthetic document pipeline") -> argparse.A
         help="Number of personas to generate (default: 10)",
     )
     parser.add_argument(
-        "--model",
+        "--text-model",
         type=str,
         default="gpt-5",
-        help="Model to use for generation (default: gpt-5)",
+        help="Model to use for text generation (default: gpt-5)",
+    )
+    parser.add_argument(
+        "--image-model",
+        type=str,
+        default="gpt-5",
+        help="Model to use for image generation (default: gpt-5)",
+    )
+    parser.add_argument(
+        "--provider",
+        type=str,
+        default="openai",
+        choices=["openai", "azure"],
+        help="Provider to use for generation (default: openai)",
     )
     return parser
