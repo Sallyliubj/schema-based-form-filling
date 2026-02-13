@@ -191,6 +191,7 @@ class ImageGenerationPipeline:
         reference_images_paths: List[Path],
         values: Dict[str, Any],
         output_path: str,
+        language: str,
     ) -> Optional[str]:
         """
         Generate a filled form image using LLM.
@@ -225,6 +226,7 @@ class ImageGenerationPipeline:
     4. Leave fields empty if the value is null
     5. Use realistic formatting for dates, numbers, and currency
     6. Make the form look authentic and professional
+    7. The language of the form is {language}
     """
 
         content = [{
@@ -297,13 +299,13 @@ class ImageGenerationPipeline:
 
         if form_type in self.args.value_filling_forms:
             # Use coordinate-based filling for T4/T5
-            image_path = os.path.join(self.args.sample_images_dir, f"{form_type}.jpg")
-            coord_path = os.path.join(self.args.coordinates_dir, f"{form_type}.json")
+            image_path = self.args.form_to_template_image.get(form_type)
+            coord_path = self.args.form_to_coordinates.get(form_type)
 
-            if not os.path.exists(image_path):
+            if not image_path or not os.path.exists(image_path):
                 print(f"✗ Template image not found: {image_path}")
                 return None
-            if not os.path.exists(coord_path):
+            if not coord_path or not os.path.exists(coord_path):
                 print(f"✗ Coordinates not found: {coord_path}")
                 return None
 
@@ -314,17 +316,16 @@ class ImageGenerationPipeline:
             return result
 
         elif form_type in self.args.llm_forms:
-            # Use LLM-based generation for other forms with multiple reference images with {form_type} as the prefix
-            # go through the images directory and get all files with {form_type} as the prefix
-            reference_images = [f for f in os.listdir(self.args.sample_images_dir) if f.startswith(form_type)]
-            reference_images_paths = [os.path.join(self.args.sample_images_dir, f) for f in reference_images]
+            # Use LLM-based generation with explicit reference images from config
+            reference_images_paths = self.args.form_to_reference_images.get(form_type, [])
 
-            if not reference_images:
+            if not reference_images_paths:
                 print(f"✗ No reference images found for {form_type}")
                 return None
 
             print(f"[{form_type.upper()}] Using LLM-based generation...")
-            result = self.generate_form_with_llm(form_type, reference_images_paths, values, output_path)
+            language = self.args.form_to_language.get(form_type)
+            result = self.generate_form_with_llm(form_type, reference_images_paths, values, output_path, language)
             if result:
                 print(f"  → Saved to: {result}")
             else:

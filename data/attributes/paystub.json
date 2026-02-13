@@ -1,0 +1,308 @@
+{
+    "pay_period_end_date": {
+        "desc": "End date of the pay period (YYYY-MM-DD)",
+        "type": "string",
+        "required": true
+    },
+    "pay_date": {
+        "desc": "Date the payment was issued / advice date (YYYY-MM-DD)",
+        "type": "string",
+        "required": true
+    },
+    "pay_frequency": {
+        "desc": "Payment frequency: 'weekly', 'bi-weekly', 'semi-monthly', 'monthly'",
+        "type": "string",
+        "required": false
+    },
+    "employee_id": {
+        "desc": "Employee identification number",
+        "type": "string",
+        "required": false
+    },
+    "employee_first_name": {
+        "desc": "Employee's first name",
+        "type": "string",
+        "required": true
+    },
+    "employee_last_name": {
+        "desc": "Employee's last name",
+        "type": "string",
+        "required": true
+    },
+    "employee_address": {
+        "desc": "Employee's mailing address",
+        "type": "string",
+        "required": true
+    },
+    "sin": {
+        "desc": "Social Insurance Number (SIN), 9-digit number - may be partially masked",
+        "type": "string",
+        "required": false
+    },
+    "employer_name": {
+        "desc": "Employer/company name",
+        "type": "string",
+        "required": true
+    },
+    "employer_address": {
+        "desc": "Employer's address",
+        "type": "string",
+        "required": false
+    },
+    "salary_rate": {
+        "desc": "Base salary rate (hourly or period amount)",
+        "type": "float",
+        "required": false
+    },
+    "hours_worked": {
+        "desc": "Hours worked in this pay period",
+        "type": "float",
+        "required": false
+    },
+    "regular_earnings_current": {
+        "desc": "Regular salary/wages for this pay period",
+        "type": "float",
+        "required": true
+    },
+    "regular_earnings_ytd": {
+        "desc": "Regular salary/wages year-to-date",
+        "type": "float",
+        "required": false
+    },
+    "overtime_earnings_current": {
+        "desc": "Overtime earnings for this pay period",
+        "type": "float",
+        "required": false
+    },
+    "overtime_earnings_ytd": {
+        "desc": "Overtime earnings year-to-date",
+        "type": "float",
+        "required": false
+    },
+    "bonus_current": {
+        "desc": "Bonus/incentive pay for this pay period",
+        "type": "float",
+        "required": false
+    },
+    "bonus_ytd": {
+        "desc": "Bonus/incentive pay year-to-date",
+        "type": "float",
+        "required": false
+    },
+    "commission_current": {
+        "desc": "Commission earnings for this pay period",
+        "type": "float",
+        "required": false
+    },
+    "commission_ytd": {
+        "desc": "Commission earnings year-to-date",
+        "type": "float",
+        "required": false
+    },
+    "rsu_current": {
+        "desc": "Restricted Stock Units vested this pay period",
+        "type": "float",
+        "required": false
+    },
+    "rsu_ytd": {
+        "desc": "Restricted Stock Units year-to-date",
+        "type": "float",
+        "required": false
+    },
+    "gross_pay_current": {
+        "desc": "Total gross pay for this pay period (before deductions)",
+        "type": "float",
+        "required": true
+    },
+    "gross_pay_ytd": {
+        "desc": "Total gross pay year-to-date",
+        "type": "float",
+        "required": false
+    },
+    "federal_tax_current": {
+        "desc": "Federal income tax deducted this pay period",
+        "type": "float",
+        "required": false
+    },
+    "federal_tax_ytd": {
+        "desc": "Federal income tax deducted year-to-date",
+        "type": "float",
+        "required": false
+    },
+    "provincial_tax_current": {
+        "desc": "Provincial income tax deducted this pay period",
+        "type": "float",
+        "required": false
+    },
+    "provincial_tax_ytd": {
+        "desc": "Provincial income tax deducted year-to-date",
+        "type": "float",
+        "required": false
+    },
+    "income_tax_current": {
+        "desc": "Total income tax deducted this pay period (if not split federal/provincial)",
+        "type": "float",
+        "required": false
+    },
+    "income_tax_ytd": {
+        "desc": "Total income tax deducted year-to-date",
+        "type": "float",
+        "required": false
+    },
+    "cpp_current": {
+        "desc": "CPP (Canada Pension Plan) contributions this pay period",
+        "type": "float",
+        "required": false
+    },
+    "cpp_ytd": {
+        "desc": "CPP contributions year-to-date",
+        "type": "float",
+        "required": false
+    },
+    "cpp2_current": {
+        "desc": "CPP2 (second CPP contribution) this pay period - for higher earners",
+        "type": "float",
+        "required": false
+    },
+    "cpp2_ytd": {
+        "desc": "CPP2 contributions year-to-date",
+        "type": "float",
+        "required": false
+    },
+    "qpp_current": {
+        "desc": "QPP (Quebec Pension Plan) contributions this pay period - Quebec only",
+        "type": "float",
+        "required": false
+    },
+    "qpp_ytd": {
+        "desc": "QPP contributions year-to-date",
+        "type": "float",
+        "required": false
+    },
+    "ei_current": {
+        "desc": "EI (Employment Insurance) premiums this pay period",
+        "type": "float",
+        "required": false
+    },
+    "ei_ytd": {
+        "desc": "EI premiums year-to-date",
+        "type": "float",
+        "required": false
+    },
+    "rpp_current": {
+        "desc": "RPP (Registered Pension Plan) contributions this pay period",
+        "type": "float",
+        "required": false
+    },
+    "rpp_ytd": {
+        "desc": "RPP contributions year-to-date",
+        "type": "float",
+        "required": false
+    },
+    "union_dues_current": {
+        "desc": "Union dues deducted this pay period",
+        "type": "float",
+        "required": false
+    },
+    "union_dues_ytd": {
+        "desc": "Union dues year-to-date",
+        "type": "float",
+        "required": false
+    },
+    "health_benefits_current": {
+        "desc": "Health/dental benefits premium this pay period",
+        "type": "float",
+        "required": false
+    },
+    "health_benefits_ytd": {
+        "desc": "Health/dental benefits year-to-date",
+        "type": "float",
+        "required": false
+    },
+    "life_insurance_current": {
+        "desc": "Life insurance premium this pay period",
+        "type": "float",
+        "required": false
+    },
+    "life_insurance_ytd": {
+        "desc": "Life insurance year-to-date",
+        "type": "float",
+        "required": false
+    },
+    "other_deductions_current": {
+        "desc": "Other miscellaneous deductions this pay period",
+        "type": "float",
+        "required": false
+    },
+    "other_deductions_ytd": {
+        "desc": "Other deductions year-to-date",
+        "type": "float",
+        "required": false
+    },
+    "total_deductions_current": {
+        "desc": "Total deductions this pay period",
+        "type": "float",
+        "required": true
+    },
+    "total_deductions_ytd": {
+        "desc": "Total deductions year-to-date",
+        "type": "float",
+        "required": false
+    },
+    "taxable_benefits_current": {
+        "desc": "Taxable benefits (car allowance, etc.) this pay period",
+        "type": "float",
+        "required": false
+    },
+    "taxable_benefits_ytd": {
+        "desc": "Taxable benefits year-to-date",
+        "type": "float",
+        "required": false
+    },
+    "net_pay_current": {
+        "desc": "Net pay (take-home pay) this pay period",
+        "type": "float",
+        "required": true
+    },
+    "net_pay_ytd": {
+        "desc": "Net pay year-to-date",
+        "type": "float",
+        "required": false
+    },
+    "bank_transit_number": {
+        "desc": "Bank transit number for direct deposit",
+        "type": "string",
+        "required": false
+    },
+    "bank_account_number": {
+        "desc": "Bank account number for direct deposit (may be masked)",
+        "type": "string",
+        "required": false
+    },
+    "direct_deposit_amount": {
+        "desc": "Amount deposited via direct deposit",
+        "type": "float",
+        "required": false
+    },
+    "vacation_accrued_hours": {
+        "desc": "Vacation hours accrued",
+        "type": "float",
+        "required": false
+    },
+    "vacation_used_hours": {
+        "desc": "Vacation hours used",
+        "type": "float",
+        "required": false
+    },
+    "vacation_balance_hours": {
+        "desc": "Vacation hours balance remaining",
+        "type": "float",
+        "required": false
+    },
+    "sick_leave_balance_hours": {
+        "desc": "Sick leave hours balance",
+        "type": "float",
+        "required": false
+    }
+}
+

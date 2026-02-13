@@ -1,0 +1,133 @@
+{
+    "year": {
+        "desc": "Tax year for this T5",
+        "type": "string",
+        "required": true
+    },
+    "recipient_last_name": {
+        "desc": "Recipient's last name",
+        "type": "string",
+        "required": true
+    },
+    "recipient_first_name": {
+        "desc": "Recipient's first name",
+        "type": "string",
+        "required": true
+    },
+    "recipient_address": {
+        "desc": "Recipient's mailing address",
+        "type": "string",
+        "required": true
+    },
+    "payer_name": {
+        "desc": "Payer's name (bank, investment company, etc.)",
+        "type": "string",
+        "required": true
+    },
+    "payer_address": {
+        "desc": "Payer's mailing address",
+        "type": "string",
+        "required": false
+    },
+    "24": {
+        "desc": "Actual amount of eligible dividends - dividends from Canadian public corporations",
+        "type": "float",
+        "required": false
+    },
+    "25": {
+        "desc": "Taxable amount of eligible dividends - grossed-up amount (138% of box 24)",
+        "type": "float",
+        "required": false
+    },
+    "26": {
+        "desc": "Dividend tax credit for eligible dividends - federal credit amount",
+        "type": "float",
+        "required": false
+    },
+    "13": {
+        "desc": "Interest from Canadian sources - interest income from savings, GICs, bonds, etc.",
+        "type": "float",
+        "required": false
+    },
+    "18": {
+        "desc": "Capital gains dividends - capital gains from mutual fund distributions",
+        "type": "float",
+        "required": false
+    },
+    "10": {
+        "desc": "Actual amount of dividends other than eligible dividends - from small business corporations",
+        "type": "float",
+        "required": false
+    },
+    "11": {
+        "desc": "Taxable amount of dividends other than eligible dividends - grossed-up amount (115% of box 10)",
+        "type": "float",
+        "required": false
+    },
+    "12": {
+        "desc": "Dividend tax credit for dividends other than eligible dividends - federal credit amount",
+        "type": "float",
+        "required": false
+    },
+    "21": {
+        "desc": "Report code - indicates type of investment income slip",
+        "type": "string",
+        "required": false
+    },
+    "22": {
+        "desc": "Recipient identification number - SIN or business number",
+        "type": "string",
+        "required": false
+    },
+    "23": {
+        "desc": "Recipient type - 1=individual, 2=joint, 3=corporation, 4=association/trust/club, 5=government",
+        "type": "string",
+        "required": false
+    },
+    "other_info_box_1": {
+        "desc": "Other information - first box number",
+        "type": "string",
+        "required": false
+    },
+    "other_info_amount_1": {
+        "desc": "Other information - first box amount",
+        "type": "float",
+        "required": false
+    },
+    "other_info_box_2": {
+        "desc": "Other information - second box number",
+        "type": "string",
+        "required": false
+    },
+    "other_info_amount_2": {
+        "desc": "Other information - second box amount",
+        "type": "float",
+        "required": false
+    },
+    "other_info_box_3": {
+        "desc": "Other information - third box number",
+        "type": "string",
+        "required": false
+    },
+    "other_info_amount_3": {
+        "desc": "Other information - third box amount",
+        "type": "float",
+        "required": false
+    },
+    "27": {
+        "desc": "Foreign currency - currency code if amounts are in foreign currency",
+        "type": "string",
+        "required": false
+    },
+    "28": {
+        "desc": "Transit - bank transit number for financial institution payers",
+        "type": "string",
+        "required": false
+    },
+    "29": {
+        "desc": "Recipient account number - account number with the payer",
+        "type": "string",
+        "required": false
+    }
+}
+
