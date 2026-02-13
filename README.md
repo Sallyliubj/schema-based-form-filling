@@ -32,20 +32,21 @@ forms:
     mode: llm
     attributes: data/forms/paystub.json
     reference_images:
-      - assets/reference/paystub_1.jpg
-      - assets/reference/paystub_2.jpg
+      - data/images/paystub1.jpg
+      - data/images/paystub2.jpg
+      - data/images/paystub3.jpg
 
   - form_type: property_tax
     mode: llm
     attributes: data/forms/property_tax.json
     reference_images:
-      - assets/reference/property_tax_1.jpg
+      - data/images/property_tax.jpg
 
   - form_type: noa
     mode: llm
     attributes: data/forms/noa.json
     reference_images:
-      - assets/reference/noa_1.jpg
+      - data/images/noa.jpg
 ```
 
 

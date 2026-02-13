@@ -191,6 +191,7 @@ class ImageGenerationPipeline:
         reference_images_paths: List[Path],
         values: Dict[str, Any],
         output_path: str,
+        language: str,
     ) -> Optional[str]:
         """
         Generate a filled form image using LLM.
@@ -225,6 +226,7 @@ class ImageGenerationPipeline:
     4. Leave fields empty if the value is null
     5. Use realistic formatting for dates, numbers, and currency
     6. Make the form look authentic and professional
+    7. The language of the form is {language}
     """
 
         content = [{
@@ -322,7 +324,8 @@ class ImageGenerationPipeline:
                 return None
 
             print(f"[{form_type.upper()}] Using LLM-based generation...")
-            result = self.generate_form_with_llm(form_type, reference_images_paths, values, output_path)
+            language = self.args.form_to_language.get(form_type)
+            result = self.generate_form_with_llm(form_type, reference_images_paths, values, output_path, language)
             if result:
                 print(f"  → Saved to: {result}")
             else:

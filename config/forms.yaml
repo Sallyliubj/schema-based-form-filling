@@ -15,17 +15,21 @@ forms:
     mode: llm
     attributes: data/attributes/paystub.json
     images:
-      - data/images/paystub_1.jpg
-      - data/images/paystub_2.jpg
+      - data/images/paystub1.jpg
+      - data/images/paystub2.jpg
+      - data/images/paystub3.jpg
+    language: French
 
   - form_type: property_tax
     mode: llm
     attributes: data/attributes/property_tax.json
     images:
-      - data/images/property_tax_1.jpg
+      - data/images/property_tax.jpg
+    language: French
 
   - form_type: noa
     mode: llm
     attributes: data/attributes/noa.json
     images:
-      - data/images/noa_1.jpg
+      - data/images/noa.jpg
+    language: French

@@ -136,6 +136,7 @@ def extract_form_mappings(
     Dict[str, List[str]],  # form_type -> images (llm)
     Dict[str, str],        # form_type -> image (template)
     Dict[str, str],        # form_type -> coordinates path (template)
+    Dict[str, str],        # form_type -> language (llm)
 ]:
     """
     Build convenient lookup maps from loaded config.
@@ -146,7 +147,7 @@ def extract_form_mappings(
     form_to_reference_images: Dict[str, List[str]] = {}
     form_to_template_image: Dict[str, str] = {}
     form_to_coordinates: Dict[str, str] = {}
-
+    form_to_language: Dict[str, str] = {}
     for entry in config.get("forms", []):
         form_type = entry["form_type"]
         # Attributes
@@ -161,7 +162,7 @@ def extract_form_mappings(
             if form_type not in llm_forms:
                 llm_forms.append(form_type)
             form_to_reference_images[form_type] = entry.get("images", [])
-
+            form_to_language[form_type] = entry.get("language", "English")
     return (
         form_to_attributes,
         value_filling_forms,
@@ -169,4 +170,5 @@ def extract_form_mappings(
         form_to_reference_images,
         form_to_template_image,
         form_to_coordinates,
+        form_to_language,
     )

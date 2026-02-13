@@ -35,6 +35,7 @@ if __name__ == "__main__":
         args.form_to_reference_images,
         args.form_to_template_image,
         args.form_to_coordinates,
+        args.form_to_language,
     ) = extract_form_mappings(config)
     args.config_data = config
 
